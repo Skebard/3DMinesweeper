@@ -67,10 +67,13 @@ function createBoard(size,mines){
             }
         }
     }
-
+    insertMines(board,mines);
+    assignNeighbourMineCount(board);
     //add mines
     //neighbour count
     //
+    console.log(board);
+    return board;
 
 }
 
@@ -111,6 +114,9 @@ let addedSmallCube = document.getElementById(idCube);
     }
     this.insertMine = function(){
         this.mined = true;
+    }
+    this.showId = function(){
+        console.log(idCube);
     }
 }
 
@@ -168,7 +174,24 @@ function myrotate2(event){
 function insertMines(board,mines){
     let insertedMines = 0;
     let boardSize = board.length;
-    
+    let randomPos;
+    console.log(randomPos);
+    //get random position
+    while(insertedMines<mines){
+        //insert miine
+        //get random position
+        randomPos = [getRandom(0,boardSize),getRandom(0,boardSize),getRandom(0,boardSize)];
+        console.log(randomPos);
+        if(board[randomPos[0]][randomPos[1]][randomPos[2]].mined===false){
+            board[randomPos[0]][randomPos[1]][randomPos[2]].mined = true;
+            insertedMines++;
+        }
+    }
+
+}
+
+function getRandom(min,max){
+    return Math.floor((Math.random()*(max-min))) +min;
 
 }
 
@@ -290,3 +313,115 @@ function multiplyMatrices(matrixA,matrixB){
         }
         );
 }
+
+
+
+function assignNeighbourMineCount(board){
+    let planeFront;
+    let planeBack;
+    let currentPlane;
+    let neighbours = [];
+
+    board.forEach((plane,indexPlane)=>{
+        plane.forEach((row,indexRow)=>{
+            row.forEach((element,indexCol)=>{
+                if(element.mined===false){
+                    currentPlane = surroundings(plane,indexRow,indexCol);
+                    if(board[indexPlane-1]!==undefined){
+                        planeBack = surroundings(board[indexPlane-1],indexRow,indexCol);
+                        planeBack["center"] = board[indexPlane-1][indexRow][indexCol];
+                    }else{
+                        planeBack = undefined;
+                    }
+                    if(board[indexPlane+1]!==undefined){
+                        planeFront = surroundings(board[indexPlane+1],indexRow,indexCol);
+                        planeFront["center"] = board[indexPlane+1][indexRow][indexCol];
+                    }else{
+                        planeFront = undefined;
+                    }
+                    neighbours[0] = currentPlane;
+                    neighbours[1] = planeBack;
+                    neighbours[2] =planeFront;
+
+                    neighbours.forEach(el=>{
+                        if( el!== undefined){
+                            for(let key in el){
+                                if((el[key]!==null) && (el[key].mined === true)){
+                                    element.neighbourMineCount++;
+                                    if(element.neighbourMineCount>1){
+                                        console.log("bomb around!")
+                                        element.showId();
+                                        el[key].showId();
+                                    }
+
+                                }
+                            }
+
+                        }
+
+                    });
+
+
+                }else{
+                    console.log("I AM A BOMB!!!")
+                    element.showId();
+                }
+            });
+        });
+    });
+
+}
+
+
+
+function revealCells(board, cellX, cellY) {
+    if (
+      board[cellX][cellY].neighborMinedCount === 0 &&
+      board[cellX][cellY].mined === false
+    ) {
+      let neigbors = surroundings(board, cellX, cellY);
+      for (let key in neigbors) {
+        if (!(neigbors[key] === null)) {
+          if (neigbors[key].mined === false && neigbors[key].opened === false) {
+            neigbors[key].opened = true;
+  
+            console.log("current element: " + cellX + " " + cellY);
+            console.log(neigbors[key].row, neigbors[key].col);
+            revealCells(board, neigbors[key].row, neigbors[key].col);
+          }
+        }
+      }
+    }
+  }
+  
+  // returns the surrounding elements  of a bidimensional matrix
+  function surroundings(matrix, y, x) {
+    // Directions are clockwise
+    return {
+      up: getCell(matrix, y - 1, x),
+      upRight: getCell(matrix, y - 1, x + 1),
+      right: getCell(matrix, y, x + 1),
+      downRight: getCell(matrix, y + 1, x + 1),
+      down: getCell(matrix, y + 1, x),
+      downLeft: getCell(matrix, y + 1, x - 1),
+      left: getCell(matrix, y, x - 1),
+      upLeft: getCell(matrix, y - 1, x - 1)
+    };
+  }
+  function getCell(matrix, y, x) {
+    var NO_VALUE = null;
+    var value, hasValue;
+  
+    try {
+      hasValue = matrix[y][x] !== undefined;
+      value = hasValue ? matrix[y][x] : NO_VALUE;
+    } catch (e) {
+      value = NO_VALUE;
+    }
+    return value;
+  }
+
+
+
+
+
