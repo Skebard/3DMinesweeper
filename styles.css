@@ -58,6 +58,9 @@ button{
     font-weight: bold;
     color: white;
     text-align: center;
+    pointer-events: none;
+    display:none;
+
 }
 
 .main-cube-face--front  {
@@ -93,22 +96,7 @@ button{
 .small-cube1{
     transform: translateZ(-75px);
 }
-.small-cube2{
-    transform: translateZ(-75px) translateX(50px);
-}
 
-.small-cube3{
-    transform: translateZ(-75px) translateX(100px);
-}
-
-.small-cube4{
-    transform: translateZ(75px) translateX(100px) translateY(0px);
-}
-
-.small-cube6{
-
-    transform: translateZ(75px) translateX(50px) translateY(150px);
-}
 
 .mini-cube{
     transform-style:preserve-3d;
@@ -151,4 +139,23 @@ button{
 .small-cube-face--bottom {
     transform: rotateX(-90deg) translateZ(25px);
     background: hsla(300, 100%, 50%, 0.7);
+}
+
+.mini-cube .small-cube-face--center{
+    transform: rotateY(45deg);
+    background-color: transparent;
+    color:black;
+    pointer-events:none;
+    font-size:2rem;
+    font-weight:bold;
+    border:none;
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer */
+ -khtml-user-select: none; /* KHTML browsers (e.g. Konqueror) */
+-webkit-user-select: none; /* Chrome, Safari, and Opera */
+-webkit-touch-callout: none; /* Disable Android and iOS callouts*/
+}
+
+.mini-cube .mine{
+    background-color:red;
 }
