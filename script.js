@@ -2,6 +2,8 @@
 const MAX_CUBE_SIZE = 150;
 const MIN_CUBE_SIZE = 50;
 const CUBE_FACES =["front","back","right","left","top","bottom"];
+const SMALL_CUBE_SIZE = 50; //the size of the small cubes is defined in the class small-cube-face in the css
+const MARGIN_SMALL_CUBE =2.5;
 
 
 let mainBoard = document.querySelector(".main-board");
@@ -42,15 +44,49 @@ function rotateBottom(){
 }
 
 
-//creates one cube objecet
-function Cube(row,col,depth,cubeSize){
+
+
+
+
+
+
+//create a cube board
+// size(mandatory): size of cube
+function createBoard(size,mines){
+    let cubeSize = SMALL_CUBE_SIZE + MARGIN_SMALL_CUBE;
+    let totalDepth = size;
+    defineMainCubeSize(size,cubeSize);
+    //create empty array that represent the board
+    let board = [];
+    for(let z = 0; z<size ; z++){
+        board.push([]); // add plane
+        for(let y = 0; y<size; y++){
+            board[z].push([]); //add row
+            for(let x=0; x<size; x++){
+                board[z][y].push(new Cube(y,x,z,cubeSize,totalDepth));
+            }
+        }
+    }
+
+    //add mines
+    //neighbour count
+    //
+
+}
+
+
+//creates one cube object and positionates it
+function Cube(row,col,depth,cubeSize,totalDepth){
 let smallCube = document.createElement("div");
 let idCube = "small-cube"+row+""+col+""+depth;
-smallCube.classList.add("mini-cube");
+smallCube.classList.add("mini-cube"); // class mini-cube is defined in the css and contains the real size of the cube
 smallCube.id = idCube;
 smallCube.style.transform += "translateX("+col*cubeSize+"px)";
 smallCube.style.transform += "translateY("+row*cubeSize+"px)";
-smallCube.style.transform += "translateZ(75px)";
+//smallCube.style.transform += "translateZ("+ (-totalDepth/2)+(cubeSize/2)+depth*cubeSize+"px)";
+let moveZ = (-totalDepth*cubeSize/2)+(cubeSize/2) +cubeSize*depth;
+console.log(moveZ);
+smallCube.style.transform += "translateZ("+moveZ+"px)";
 
 
 CUBE_FACES.forEach((face)=>{
@@ -79,9 +115,12 @@ let addedSmallCube = document.getElementById(idCube);
 }
 
 //by default squared
-function defineMainCubeSize(rows,columns,depth){
+function defineMainCubeSize(size,cS){
+    let rows = size;
+    let columns = size;
+    let depth = size;
     //defineCubeSizes
-    let cubeSize = 50;
+    let cubeSize = (cS!=undefined)? cS: 55;
     //scene
     scene.style.width= columns*cubeSize+"px";
     scene.style.height = rows*cubeSize+"px";
@@ -96,14 +135,10 @@ function defineMainCubeSize(rows,columns,depth){
         face.style.height = rows*cubeSize+"px";
         face.style.lineHeight = rows*cubeSize+"px";
         if(face.classList.contains("main-cube-face--front")){
-            face. style.width = columns*cubeSize+"px";
-            face.style.height = rows*cubeSize+"px";
             face.style.transform = "rotateY(  0deg) translateZ("+depth*cubeSize/2+"px)";
         }else if(face.classList.contains("main-cube-face--right")){
             face.style.transform = "rotateY(  90deg) translateZ("+columns*cubeSize/2+"px)";
         }else if(face.classList.contains("main-cube-face--back")){
-            face. style.width = columns*cubeSize+"px";
-            face.style.height = rows*cubeSize+"px";
             face.style.transform = "rotateY(  180deg) translateZ("+depth*cubeSize/2+"px)";
         }else if(face.classList.contains("main-cube-face--left")){
             face.style.transform = "rotateY(  -90deg) translateZ("+columns*cubeSize/2+"px)";
@@ -116,6 +151,9 @@ function defineMainCubeSize(rows,columns,depth){
 
 }
 
+
+
+
 mainCube.addEventListener("click",myrotate);
 function myrotate(event){
    mainCube.style.transform =" translateZ(-100px) rotateY( -90deg)";
@@ -123,9 +161,22 @@ function myrotate(event){
 function myrotate2(event){
     mainCube.style.transform =" translateZ(-100px) rotateY( 90deg)";
  }
-function defineCubeSizes(rows,columns,depth){
+
+
+// insert mines in the board
+// board(mandatory): 3D square matrix with cube objects
+function insertMines(board,mines){
+    let insertedMines = 0;
+    let boardSize = board.length;
+    
 
 }
+
+
+
+
+
+
 
 
 function rotateY(obj,degrees){
@@ -144,6 +195,10 @@ function rotateY(obj,degrees){
 }
 
 
+
+
+
+
 function rotateX(obj,degrees){
     let [cosine, sine] = calculateCosSin(degrees);
     let rotationMatrix = [[1,0,0,0],[0,cosine,-sine,0],[0,sine,cosine,0],[0,0,0,1]];
@@ -159,6 +214,8 @@ function rotateX(obj,degrees){
     return rotatedMatrix;
 }
 
+
+
 function calculateCosSin(degrees){
     let angleRad = (degrees*Math.PI*2)/360;
     let cosine = parseFloat(Math.cos(angleRad).toFixed(2));
@@ -166,6 +223,8 @@ function calculateCosSin(degrees){
     return [cosine,sine];
 
 }
+
+
 
 function rotateZ(obj,degrees){
     let [cosine, sine] = calculateCosSin(degrees);
@@ -180,6 +239,9 @@ function rotateZ(obj,degrees){
 
     return rotatedMatrix;
 }
+
+
+
 
 //Returns the homogeneous matrix 4X4 of the entered 3D object
 // obj (mandatory): elementHTML
