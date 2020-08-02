@@ -5,15 +5,17 @@
     <meta charset="UTF-8">
     <title>MindSweeper</title>
     <link rel="stylesheet" href="styles.css">
-    
+    <script src="https://kit.fontawesome.com/9547750bbd.js" crossorigin="anonymous"></script>
+
+
 </head>
 
 <body>
     <header>
         <div class="logo">
-            3D Minesweeper 
+            3D Minesweeper
         </div>
-        <div >
+        <div>
             <ul class="language-menu">
                 <li class="flag russian-flag">
                     <img src="Images/uk-flag.png">
@@ -27,6 +29,14 @@
             </ul>
         </div>
     </header>
+    <div class="dark-background hide">
+    </div>
+    <div class="scene-ranking">
+        <div class="ranking-cube">
+            
+        </div>
+
+    </div>
     <main>
         <section class="intro hide">
 
@@ -39,39 +49,59 @@
                         <li id="select-log-in">Log in</li>
                         <li id="select-guest">Play as a guest</li>
                     </ul>
-                    <div class="register user-menu-content" id="registration-form">
-                        <form>
-                            <label for="username">Username</label>
+                    <div class="user-menu-content" id="registration-form" >
+                        <form >
+                            <label for="username">Choose your username</label>
                             <input type="text" id="username" name="username">
                             <label for="password">Password</label>
                             <input type="password" id="password" name="password">
-                            <label for="password-again">Password</label>
+                            <label for="password-again">Confirm password</label>
                             <input type="password" id="password-again" name="password-again">
                             <label for="email">Email</label>
                             <input type="text" id="email" name="email">
-                            <button type="button">PLAY</button>
+                            <button type="button" id="btn-register">PLAY</button>
                         </form>
                     </div>
-                    <div class="log-in user-menu-content hide" id="log-in-form">
-                        <form>
-                            <label for="username">Username</label>
+                    <div class="user-menu-content hide" id="log-in-form">
+                        <form >
+                            <label for="username">Choose your username</label>
                             <input type="text" id="username" name="username">
                             <label for="password">Password</label>
                             <input type="password" id="password" name="password">
-                            <button type="button">PLAY</button>
+                            <button type="button" id="btn-logIn">PLAY</button>
                         </form>
 
                     </div>
-                    <div class="play-guest user-menu-content hide" id="guest-form">
+                    <div class="play-guest user-menu-content hide"  id="guest-form" >
                         <form>
-                            <label for="username">Username</label>
+                            <label for="username">Choose your username</label>
                             <input type="text" id="username" name="username">
-                             <button type="button">PLAY</button>
+                            <button type="button" id="btn-guest">PLAY</button>
                         </form>
                     </div>
                 </div>
             </div>
-            <div class="ranking"></div>
+            <div class="ranking hide">
+                <dl>
+                    <dt class="gold-trophy">
+                        <i class="fas fa-trophy gold-trophy"></i>
+                        <span>Antonio</span>
+                    </dt>
+                    <dd>32423</dd>
+                    <dt class="silver-trophy">
+                        <i class="fas fa-trophy silver-trophy"></i>
+                        <span>Juan</span>
+                    </dt>
+                    <dd>234</dd>
+                    <dt class="bronze-trophy">
+                        <i class="fas fa-trophy bronze-trophy"></i>
+                        <span>Pedro</span>
+                    </dt>
+                    <dd>54</dd>
+                    <dd></dd>
+                </dl>
+            </div>
+
 
         </section>
         <section class="game-screen hide">
@@ -116,19 +146,19 @@
                                 bottom
                             </div>
                         </div>
-    
+
                     </div>
-    
+
                 </div>
-                <div class= " rotate-arrow rotate-right" id="rotateRight"></div>
-                <div class= " rotate-arrow rotate-top" id="rotateTop"></div>
-                <div class= " rotate-arrow rotate-left" id="rotateLeft"></div>
-                <div class= " rotate-arrow rotate-bottom" id="rotateBottom"></div>
+                <div class=" rotate-arrow rotate-right" id="rotateRight"></div>
+                <div class=" rotate-arrow rotate-top" id="rotateTop"></div>
+                <div class=" rotate-arrow rotate-left" id="rotateLeft"></div>
+                <div class=" rotate-arrow rotate-bottom" id="rotateBottom"></div>
             </div>
         </section>
-      
-      
-        
+
+
+
     </main>
     <footer></footer>
     <script src="script.js"></script>

@@ -5,6 +5,9 @@ const CUBE_FACES = ["front", "back", "right", "left", "top", "bottom"];
 const SMALL_CUBE_SIZE = 50; //the size of the small cubes is defined in the class small-cube-face in the css
 const MARGIN_SMALL_CUBE = 2.5;
 const ROTATE_INTERVAL = 2;
+const USERNAME_REGEX = /^[a-zA-Z0-9]+$/;
+const PASSWORD_REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 //HTML elements
 let mainBoard = document.querySelector(".main-board");
@@ -21,6 +24,10 @@ let guestForm = document.getElementById("guest-form");
 let selectRegister = document.getElementById("select-register");
 let selectLogIn = document.getElementById("select-log-in");
 let selectGuest = document.getElementById("select-guest");
+let btnRegister = document.getElementById("btn-register");
+let btnLogIn = document.getElementById("btn-logIn");
+let btnGuest = document.getElementById("btn-guest");
+
 
 
 //game variables
@@ -28,71 +35,241 @@ let totalMines;
 let openedCubes;
 let totalCubes;
 
+
+//Users
+let users = [];
+let currentUser;
+
+
 // Forms management
-selectRegister.addEventListener("click",()=>{
-    addClassToElement(selectRegister,"selected");
-    removeClassElement(selectLogIn,"selected");
-    removeClassElement(selectGuest,"selected");
-    removeClassElement(registerForm,"hide");
-    addClassToElement(logInForm,"hide");
-    addClassToElement(guestForm,"hide");
+selectRegister.addEventListener("click", () => {
+    addClassToElement(selectRegister, "selected");
+    removeClassElement(selectLogIn, "selected");
+    removeClassElement(selectGuest, "selected");
+    removeClassElement(registerForm, "hide");
+    addClassToElement(logInForm, "hide");
+    addClassToElement(guestForm, "hide");
 });
-selectLogIn.addEventListener("click",()=>{
-    removeClassElement(selectRegister,"selected");
-    addClassToElement(selectLogIn,"selected");
-    removeClassElement(selectGuest,"selected");
-    removeClassElement(logInForm,"hide");
-    addClassToElement(registerForm,"hide");
-    addClassToElement(guestForm,"hide");
+selectLogIn.addEventListener("click", () => {
+    removeClassElement(selectRegister, "selected");
+    addClassToElement(selectLogIn, "selected");
+    removeClassElement(selectGuest, "selected");
+    removeClassElement(logInForm, "hide");
+    addClassToElement(registerForm, "hide");
+    addClassToElement(guestForm, "hide");
 });
-selectGuest.addEventListener("click",()=>{
-    removeClassElement(selectRegister,"selected");
-    removeClassElement(selectLogIn,"selected");
-    addClassToElement(selectGuest,"selected");
-    removeClassElement(guestForm,"hide");
-    addClassToElement(registerForm,"hide");
-    addClassToElement(logInForm,"hide");
+selectGuest.addEventListener("click", () => {
+    removeClassElement(selectRegister, "selected");
+    removeClassElement(selectLogIn, "selected");
+    addClassToElement(selectGuest, "selected");
+    removeClassElement(guestForm, "hide");
+    addClassToElement(registerForm, "hide");
+    addClassToElement(logInForm, "hide");
 });
 
-function addClassToElement(form,klass){
-    if(!form.classList.contains(klass)){
+function addClassToElement(form, klass) {
+    if (!form.classList.contains(klass)) {
         form.classList.add(klass);
     }
 }
-function removeClassElement(form,klass){
-    if(form.classList.contains(klass)){
+
+function removeClassElement(form, klass) {
+    if (form.classList.contains(klass)) {
         form.classList.remove(klass);
     }
 }
 
 
 
-arrowRight.addEventListener("mousedown",()=>{
-    eventRotate(rotateY,-1,arrowRight);
+arrowRight.addEventListener("mousedown", () => {
+    eventRotate(rotateY, -1, arrowRight);
 });
-arrowTop.addEventListener("mousedown",()=>{
-    eventRotate(rotateX,-1,arrowTop);
+arrowTop.addEventListener("mousedown", () => {
+    eventRotate(rotateX, -1, arrowTop);
 });
-arrowLeft.addEventListener("mousedown",()=>{
-    eventRotate(rotateY,1,arrowLeft);
+arrowLeft.addEventListener("mousedown", () => {
+    eventRotate(rotateY, 1, arrowLeft);
 });
-arrowBottom.addEventListener("mousedown",()=>{
-    eventRotate(rotateX,1,arrowBottom);
+arrowBottom.addEventListener("mousedown", () => {
+    eventRotate(rotateX, 1, arrowBottom);
 });
 
-function eventRotate(rotateFunction,direction,element){
-    let smooth = setInterval(function(){
-        rotateFunction(mainCube,ROTATE_INTERVAL*direction);
-    },25);
-    element.addEventListener("mouseout",()=>{
-        clearInterval(smooth);
-    },{
-        once:true
+
+
+
+
+//todo Users management functions
+//we supose that one user can make mor that on match
+function User(guest, username, pass = undefined, email = undefined) {
+    let password = pass;
+    this.username = username;
+    this.guest = guest;
+    this.matches = [];
+    this.email = email;
+    this.setPassword = function (oldPassword, newPassword) {
+        if (oldPassword === password) {
+            password = newPassword;
+            return true;
+        } else {
+            return false;
+        }
+    }
+    this.verifyPassword = function (userPassword) {
+        if (userPassword === password) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+}
+
+function Match() {
+    this.score;
+    this.time;
+}
+
+
+btnRegister.addEventListener("click", () => {
+    let currentForm = document.querySelector("#registration-form > form");
+    checkFormInputs(currentForm);
+});
+btnLogIn.addEventListener("click", () => {
+    let currentForm = document.querySelector("#log-in-form > form");
+    checkFormInputs(currentForm);
+});
+
+btnGuest.addEventListener("click", newGuest);
+//check if the inputs of the form are correct and if so stores the information in a new user object
+function checkFormInputs(form) {
+    let verifiedFields = 0;
+    let username;
+    let password;
+    let email;
+    let inputs = form.querySelectorAll("input");
+    if ((inputs[0].value.length > 4) && (USERNAME_REGEX.test(inputs[0].value))) {
+        username = inputs[0].value;
+        verifiedFields++;
+    } else {
+        //error
+        console.log("error username");
+    }
+
+    if (PASSWORD_REGEX.test(inputs[1].value)) {
+        password = inputs[1].value;
+        verifiedFields++;
+    } else {
+        //error
+        console.log("error pass");
+    }
+
+    if (inputs[2] !== undefined) {
+        if (password === inputs[2].value) {
+            verifiedFields++; // if password is undefined it will enter but doesn't matter
+        } else {
+            //error  passwords do not match
+            console.log("error conf pass");
+        }
+    }
+
+    if (inputs[3] !== undefined) {
+        if (EMAIL_REGEX.test(inputs[3].value)) {
+            email = inputs[3].value;
+            verifiedFields++;
+
+        } else {
+            //error
+            console.log("error email")
+        }
+    }
+
+    if (inputs.length === verifiedFields) {
+        let newUser;
+        console.log("all good");
+        switch (inputs.length) {
+            case 2: // log in
+                return logInUser(username, password);
+            case 4: //register new user
+                let error = 0;
+                users.forEach(user => {
+                    if (user.username === username) {
+                        console.log("usernam already exists");
+                        error++;
+                    }
+                    if (user.email === email) {
+                        console.log("email already exists");
+                        error++;
+                    }
+                });
+                if (error > 0) {
+                    return false;
+                }
+
+                newUser = new User(false, username, password, email);
+                users.push(newUser);
+                console.log(newUser);
+                return newUser;
+                break;
+            default:
+                break;
+        }
+    } else {
+        console.log("somt wrong");
+        return false;
+    }
+}
+
+function logInUser(username, password) {
+    users.forEach((user) => {
+        if (user.username = username) {
+            if (user.verifyPassword(password)) {
+                return user;
+            } else {
+                return false;
+            }
+        }
     });
-    element.addEventListener("mouseup",()=>{
+    return false;
+}
+
+function newGuest() {
+    let newUser = new User(true, "A_" + new Date().getTime().toString().slice(-10));
+    users.push(newUser);
+    console.log(newUser);
+    return newUser;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function eventRotate(rotateFunction, direction, element) {
+    let smooth = setInterval(function () {
+        rotateFunction(mainCube, ROTATE_INTERVAL * direction);
+    }, 25);
+    element.addEventListener("mouseout", () => {
         clearInterval(smooth);
-    },{
-        once:true
+    }, {
+        once: true
+    });
+    element.addEventListener("mouseup", () => {
+        clearInterval(smooth);
+    }, {
+        once: true
     });
 }
 
@@ -114,7 +291,7 @@ function openCube(event, board) {
         currentCube.showNeighbourNumber();
         currentCube.opened = true;
         revealNeighbours(board, currentCube);
-        if(openedCubes === totalCubes-totalMines){
+        if (openedCubes === totalCubes - totalMines) {
             console.log("YOU WIN!!");
             //display menu 
             //play again
@@ -125,12 +302,12 @@ function openCube(event, board) {
         }
     }
 
-    
+
 
 }
 
 // play with the same size
-function playAgain(){
+function playAgain() {
 
 }
 
@@ -172,7 +349,7 @@ function createBoard(size, mines) {
     assignNeighbourMineCount(board);
 
     totalMines = mines;
-    totalCubes = size*size*size;
+    totalCubes = size * size * size;
     openedCubes = 0;
 
     let smallCubes = document.querySelectorAll(".mini-cube");

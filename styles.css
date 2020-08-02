@@ -13,7 +13,9 @@ input{
 ul{
     list-style-type:none;
 }
-
+button:hover{
+    cursor:pointer;
+}
 body{
     position:relative;
     min-height:100vh;
@@ -32,6 +34,11 @@ header{
     flex-wrap: nowrap;
 }
 .logo{
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer */
+ -khtml-user-select: none; /* KHTML browsers (e.g. Konqueror) */
+-webkit-user-select: none; /* Chrome, Safari, and Opera */
+-webkit-touch-callout: none; /* Disable Android and iOS callouts*/
     margin-left:2rem;
     flex-shrink: 0;
     font-family:verdana;
@@ -81,7 +88,17 @@ header{
     opacity:0.7;
 }
 
-
+.dark-background{
+    position:absolute;
+    top:0;
+    left:0;
+    background-color:black;
+    width:100%;
+    height:100%;
+    z-index:10;
+    opacity:0.7;
+    
+}
 /*********** MAIN MENU *************/
 .main-menu{
     display:flex;
@@ -90,6 +107,7 @@ header{
     position:relative;
     justify-content:center;
     overflow-x:hidden;
+    margin-top:2rem;
 }
 form > button{
     width:100%;
@@ -99,25 +117,36 @@ form > button{
 }
 .user-menu-container{
     height:100%;
-    width:70%;
-    border: 1px solid white;
+    border: 2px solid white;
 }
 .user-menu{
-    width:70%;
+    width:100%;
 }
 .user-menu-content{
     display:flex;
     flex-direction:column;
     justify-content:center;
     align-items:center;
-    height:300px;
     width:100%;
-    border: 1px solid red;
     background-color:white;
+    padding: 1rem 0;
 }
 .user-menu-content *{
     color:black;
 }
+.user-menu-container input{
+    width:100%;
+    padding:0.2rem;
+}
+.user-menu-content label{
+    font-weight:bold;
+    margin-bottom:0.2rem;
+    margin-top:1rem;
+}
+.user-menu-content button{
+    margin-top:1rem;
+}
+
 .user-options > li{
     font-weight:bold;
     text-shadow: 1px 1px 1px #919191,
@@ -128,6 +157,13 @@ form > button{
 1px 8px 17px rgba(16,16,16,0.2),
 1px 10px 30px rgba(16,16,16,0.4);
 }
+.user-options > li:hover{
+    opacity:0.7;
+}
+.user-options > li.selected{
+    opacity:1;
+}
+
 
 
 .selected{
@@ -150,18 +186,52 @@ form > button{
     flex-grow:2;
     flex-shrink:0;
     padding:1rem;
-    border-right: 1px solid white;
     cursor:pointer;
     text-align:center;
 }
 .ranking{
     position:absolute;
-    right:-29%;
-    width:30%;
-    height:100%;
+    right:-0%;
+    width:50%;
     border: 1px solid white;
-    max-height:100%;
+    max-height:80vh;
     overflow-y:auto;
+    transition: all 5s;
+    z-index:100;
+    background-color:white;
+    padding-top:1rem;
+    padding-left:1rem;
+}
+.ranking span{
+    color:black;
+    font-weight:bold;
+}
+.ranking dt.gold-trophy{
+    font-size: 2rem;
+}
+.ranking dt.silver-trophy{
+    font-size:1.8rem;
+}
+.ranking dt.bronze-trophy{
+    font-size: 1.5rem;
+}
+.ranking dd{
+    color:black;
+    padding-left:5rem;
+}
+i.gold-trophy{
+    color:#ffbc01;
+    font-size:3rem;
+}
+i.silver-trophy{
+    color:#b2b4b3;
+    font-size:2.5rem;
+    padding:0 0.25rem;
+}
+i.bronze-trophy{
+    color: #d36f4b;
+    font-size:2rem;
+    padding: 0 0.5rem;
 }
 
 
@@ -172,6 +242,21 @@ footer{
     bottom:0;
     left:0;
     border:1px solid black;
+}
+
+
+.scene-ranking{
+    width: 100px;
+    height: 100px;
+    perspective:400px;
+    position:absolute;
+}
+.ranking-cube{
+    width:100%;
+    height:100%;
+    position:relative;
+    transform-style:preserve-3d;
+    transform: translateZ(-50);
 }
 
 /****** MAIN STYLES ******/
