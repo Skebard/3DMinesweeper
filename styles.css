@@ -28,6 +28,9 @@ button{
     min-height:80vh;
     border:3px solid red;
     padding: 50px;
+    position:relative;
+    overflow:hidden;
+  
 }
 .scene{
     width:200px;
@@ -40,8 +43,8 @@ button{
     position:relative;
     transform-style:preserve-3d; /* */
     transform: translateZ(-100px);
-    transition:  1s;
-  
+    transition:  0s;
+   
 }
 
 .main-cue:hover{
@@ -158,4 +161,29 @@ button{
 
 .mini-cube .mine{
     background-color:red;
+}
+
+
+.rotate-arrow{
+    position:absolute;
+    border: 100px solid transparent;
+    cursor:pointer;
+    content:"";
+    border-radius: 20px;
+}
+.rotate-right{
+    right: -80px;
+    border-left: 40px solid blue;
+}
+.rotate-left{
+    left: -80px;
+    border-right: 40px solid blue;
+}
+.rotate-top{
+    top: -80px;
+    border-bottom: 40px solid blue;
+}
+.rotate-bottom{
+    bottom: -80px;
+    border-top: 40px solid blue;
 }

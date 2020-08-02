@@ -4,37 +4,102 @@ const MIN_CUBE_SIZE = 50;
 const CUBE_FACES = ["front", "back", "right", "left", "top", "bottom"];
 const SMALL_CUBE_SIZE = 50; //the size of the small cubes is defined in the class small-cube-face in the css
 const MARGIN_SMALL_CUBE = 2.5;
+const ROTATE_INTERVAL = 2;
 
-
+//HTML elements
 let mainBoard = document.querySelector(".main-board");
 let scene = document.querySelector(".scene");
 let mainCube = document.querySelector(".main-cube");
 let mainCubeFace = document.querySelectorAll(".main-cube-face");
+let arrowRight = document.getElementById("rotateRight");
+let arrowTop = document.getElementById("rotateTop");
+let arrowLeft = document.getElementById("rotateLeft");
+let arrowBottom = document.getElementById("rotateBottom");
+
+//game variables
+let totalMines;
+let openedCubes;
+let totalCubes;
+
+arrowRight.addEventListener("mousedown",()=>{
+    eventRotate(rotateY,-1,arrowRight);
+});
+arrowTop.addEventListener("mousedown",()=>{
+    eventRotate(rotateX,-1,arrowTop);
+});
+arrowLeft.addEventListener("mousedown",()=>{
+    eventRotate(rotateY,1,arrowLeft);
+});
+arrowBottom.addEventListener("mousedown",()=>{
+    eventRotate(rotateX,1,arrowBottom);
+});
+
+function eventRotate(rotateFunction,direction,element){
+    let smooth = setInterval(function(){
+        rotateFunction(mainCube,ROTATE_INTERVAL*direction);
+    },25);
+    element.addEventListener("mouseout",()=>{
+        clearInterval(smooth);
+    },{
+        once:true
+    });
+    element.addEventListener("mouseup",()=>{
+        clearInterval(smooth);
+    },{
+        once:true
+    });
+}
 
 
 
-
-function hideCube(event,board){
-    let [plane,row,col] = event.currentTarget.id.slice(-3).split("");
+function openCube(event, board) {
+    let [plane, row, col] = event.currentTarget.id.slice(-3).split("");
     let currentCube = board[plane][row][col];
 
-    if(currentCube.mined === true){
+    if (currentCube.mined === true) {
         currentCube.showMine();
-    }else{
+        // display menu
+        endGame(board);
+        //end game
+        //play again 
+        //menu
+    } else {
+        openedCubes++;
         currentCube.showNeighbourNumber();
         currentCube.opened = true;
-        //propagate
-        revealNeighbours(board,currentCube);
-        if(currentCube.neighbourMineCount===0){
+        revealNeighbours(board, currentCube);
+        if(openedCubes === totalCubes-totalMines){
+            console.log("YOU WIN!!");
+            //display menu 
+            //play again
+            // menu
+        }
+        if (currentCube.neighbourMineCount === 0) {
             console.log("I AM SAFE");
         }
-
     }
 
-
-    //event.currentTarget.classList.add("hide");
+    
 
 }
+
+// play with the same size
+function playAgain(){
+
+}
+
+//remove event listeners and delete small cubes
+function endGame(board) {
+    board.forEach(plane => {
+        plane.forEach(row => {
+            row.forEach(cube => {
+                console.log("remove");
+                cube.removeCube();
+            });
+        });
+    });
+}
+
 
 
 //  "matrix3d(0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -100, 1)"
@@ -99,14 +164,18 @@ function createBoard(size, mines) {
     insertMines(board, mines);
     assignNeighbourMineCount(board);
 
+    totalMines = mines;
+    totalCubes = size*size*size;
+    openedCubes = 0;
+
     let smallCubes = document.querySelectorAll(".mini-cube");
-    smallCubes.forEach(cube=>{
-      cube.addEventListener("click",(event)=>{
-          hideCube(event,board);
-      });
+    smallCubes.forEach(cube => {
+        cube.addEventListener("click", (event) => {
+            openCube(event, board);
+        });
     });
 
- 
+
 
     console.log(board);
     return board;
@@ -133,9 +202,9 @@ function Cube(row, col, depth, cubeSize, totalDepth) {
         newFace.className = ("small-cube-face " + "small-cube-face--" + face);
         smallCube.insertAdjacentElement("beforeend", newFace);
     });
-        let myNumber = document.createElement("div");
-        myNumber.className = ("small-cube-face " + "small-cube-face--center");
-        smallCube.insertAdjacentElement("beforeend", myNumber);
+    let myNumber = document.createElement("div");
+    myNumber.className = ("small-cube-face " + "small-cube-face--center");
+    smallCube.insertAdjacentElement("beforeend", myNumber);
     mainCube.insertAdjacentElement("beforeend", smallCube);
     let addedSmallCube = document.getElementById(idCube);
     this.row = row;
@@ -157,18 +226,22 @@ function Cube(row, col, depth, cubeSize, totalDepth) {
     this.showId = function () {
         console.log(idCube);
     }
-    this.showNeighbourNumber = function(){
-        if(this.neighbourMineCount>0){ // if ther are no bombs around do not display any number
+    this.showNeighbourNumber = function () {
+        if (this.neighbourMineCount > 0) { // if ther are no bombs around do not display any number
             let myNumber = document.createElement("div");
             myNumber.textContent = this.neighbourMineCount;
             myNumber.className = ("small-cube-face " + "small-cube-face--center");
             addedSmallCube.insertAdjacentElement("beforeend", myNumber);
         }
 
-        for(let i = 0; i<CUBE_FACES.length; i++){
+        for (let i = 0; i < CUBE_FACES.length; i++) {
             addedSmallCube.children[i].style.display = "none";
         }
 
+    }
+    this.removeCube = function () {
+        addedSmallCube.removeEventListener("click", openCube);
+        addedSmallCube.remove();
     }
 }
 
@@ -255,9 +328,7 @@ function rotateY(obj, degrees) {
     let currentMatrix = getCurrentMatrix3D(obj);
     let rotatedMatrix = multiplyMatrices(currentMatrix, rotationMatrix);
     rotatedMatrix[3] = currentMatrix[3]; // to avoid changing the position(translation)
-    console.log(rotatedMatrix);
     obj.style.transform = "matrix3d(" + rotatedMatrix.join() + ")";
-
     // make sure that the transition is finished before next rotation;
 
 
@@ -280,7 +351,6 @@ function rotateX(obj, degrees) {
     let currentMatrix = getCurrentMatrix3D(obj);
     let rotatedMatrix = multiplyMatrices(currentMatrix, rotationMatrix);
     rotatedMatrix[3] = currentMatrix[3]; // to avoid changing the position(translation)
-    console.log(rotatedMatrix);
     obj.style.transform = "matrix3d(" + rotatedMatrix.join() + ")";
 
     // make sure that the transition is finished before next rotation;
@@ -293,8 +363,8 @@ function rotateX(obj, degrees) {
 
 function calculateCosSin(degrees) {
     let angleRad = (degrees * Math.PI * 2) / 360;
-    let cosine = parseFloat(Math.cos(angleRad).toFixed(2));
-    let sine = parseFloat(Math.sin(angleRad).toFixed(2));
+    let cosine = parseFloat(Math.cos(angleRad));
+    let sine = parseFloat(Math.sin(angleRad));
     return [cosine, sine];
 
 }
@@ -384,7 +454,7 @@ function assignNeighbourMineCount(board) {
         plane.forEach((row) => {
             row.forEach((element) => {
                 if (element.mined === false) {
-                    neighbours = getNeighbours(element,board);
+                    neighbours = getNeighbours(element, board);
                     neighbours.forEach(el => {
                         if (el !== undefined) {
                             for (let key in el) {
@@ -416,19 +486,20 @@ function assignNeighbourMineCount(board) {
 
 
 
-function revealNeighbours( board,currentCube) {
+function revealNeighbours(board, currentCube) {
     if (currentCube.neighbourMineCount === 0 &&
         currentCube.mined === false
     ) {
-        let neighbours = getNeighbours(currentCube,board);
+        let neighbours = getNeighbours(currentCube, board);
         neighbours.forEach(plane => {
             if (plane !== undefined) {
                 for (let key in plane) {
                     if ((plane[key] !== null)) {
-                        if (plane[key].mined === false && plane[key].opened === false){
+                        if (plane[key].mined === false && plane[key].opened === false) {
                             plane[key].opened = true;
                             plane[key].showNeighbourNumber();
-                            revealNeighbours( board, plane[key]);
+                            openedCubes++;
+                            revealNeighbours(board, plane[key]);
                         }
 
                     }
@@ -444,7 +515,7 @@ function revealNeighbours( board,currentCube) {
 
 //Returns an array where each element is an object that contains the neighbours of one of the surrounding planes
 //if such plane does not exist, then returns undefined for that position
-function getNeighbours(element,board){
+function getNeighbours(element, board) {
 
     let currentPlane, planeBack, planeFront;
     let neighbours = [];
@@ -453,25 +524,25 @@ function getNeighbours(element,board){
     let indexCol = element.col;
     let plane = board[indexPlane];
 
-        currentPlane = surroundings(plane, indexRow, indexCol);
-        if (board[indexPlane - 1] !== undefined) {
-            planeBack = surroundings(board[indexPlane - 1], indexRow, indexCol);
-            planeBack["center"] = board[indexPlane - 1][indexRow][indexCol];
-        } else {
-            planeBack = undefined;
-        }
-        if (board[indexPlane + 1] !== undefined) {
-            planeFront = surroundings(board[indexPlane + 1], indexRow, indexCol);
-            planeFront["center"] = board[indexPlane + 1][indexRow][indexCol];
-        } else {
-            planeFront = undefined;
-        }
-        neighbours[0] = currentPlane;
-        neighbours[1] = planeBack;
-        neighbours[2] = planeFront;
-    
+    currentPlane = surroundings(plane, indexRow, indexCol);
+    if (board[indexPlane - 1] !== undefined) {
+        planeBack = surroundings(board[indexPlane - 1], indexRow, indexCol);
+        planeBack["center"] = board[indexPlane - 1][indexRow][indexCol];
+    } else {
+        planeBack = undefined;
+    }
+    if (board[indexPlane + 1] !== undefined) {
+        planeFront = surroundings(board[indexPlane + 1], indexRow, indexCol);
+        planeFront["center"] = board[indexPlane + 1][indexRow][indexCol];
+    } else {
+        planeFront = undefined;
+    }
+    neighbours[0] = currentPlane;
+    neighbours[1] = planeBack;
+    neighbours[2] = planeFront;
+
     return neighbours;
-    
+
 }
 
 
