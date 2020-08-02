@@ -10,72 +10,124 @@
 
 <body>
     <header>
-
+        <div class="logo">
+            3D Minesweeper 
+        </div>
+        <div >
+            <ul class="language-menu">
+                <li class="flag russian-flag">
+                    <img src="Images/uk-flag.png">
+                </li>
+                <li class="flag english-flag">
+                    <img src="Images/spanish-flag.png">
+                </li>
+                <li class="flag spanish-flag">
+                    <img src="Images/russian-flag.png">
+                </li>
+            </ul>
+        </div>
     </header>
     <main>
+        <section class="intro hide">
 
-        <div class="main-board">
-            <div class="scene">
-                <div class="main-cube">
-                    <div class="main-cube-face main-cube-face--front">
-                        front
+        </section>
+        <section class="main-menu">
+            <div class="user-menu-container">
+                <div class="user-menu">
+                    <ul class="user-options">
+                        <li class="selected" id="select-register">Register</li>
+                        <li id="select-log-in">Log in</li>
+                        <li id="select-guest">Play as a guest</li>
+                    </ul>
+                    <div class="register user-menu-content" id="registration-form">
+                        <form>
+                            <label for="username">Username</label>
+                            <input type="text" id="username" name="username">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" name="password">
+                            <label for="password-again">Password</label>
+                            <input type="password" id="password-again" name="password-again">
+                            <label for="email">Email</label>
+                            <input type="text" id="email" name="email">
+                            <button type="button">PLAY</button>
+                        </form>
                     </div>
-                    <div class="main-cube-face main-cube-face--back">
-                        back
+                    <div class="log-in user-menu-content hide" id="log-in-form">
+                        <form>
+                            <label for="username">Username</label>
+                            <input type="text" id="username" name="username">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" name="password">
+                            <button type="button">PLAY</button>
+                        </form>
+
                     </div>
-                    <div class="main-cube-face main-cube-face--right">
-                        right
+                    <div class="play-guest user-menu-content hide" id="guest-form">
+                        <form>
+                            <label for="username">Username</label>
+                            <input type="text" id="username" name="username">
+                             <button type="button">PLAY</button>
+                        </form>
                     </div>
-                    <div class="main-cube-face main-cube-face--left">
-                        let
-                    </div>
-                    <div class="main-cube-face main-cube-face--top">
-                        top
-                    </div>
-                    <div class="main-cube-face main-cube-face--bottom">
-                        bottom
-                    </div>
-                    <div class="small-cube1 mini-cube hide">
-                        <div class="small-cube-face small-cube-face--front">
+                </div>
+            </div>
+            <div class="ranking"></div>
+
+        </section>
+        <section class="game-screen hide">
+            <div class="main-board">
+                <div class="scene">
+                    <div class="main-cube">
+                        <div class="main-cube-face main-cube-face--front">
                             front
                         </div>
-                        <div class="small-cube-face small-cube-face--back">
+                        <div class="main-cube-face main-cube-face--back">
                             back
                         </div>
-                        <div class="small-cube-face small-cube-face--right">
+                        <div class="main-cube-face main-cube-face--right">
                             right
                         </div>
-                        <div class="small-cube-face small-cube-face--left">
+                        <div class="main-cube-face main-cube-face--left">
                             let
                         </div>
-                        <div class="small-cube-face small-cube-face--top">
+                        <div class="main-cube-face main-cube-face--top">
                             top
                         </div>
-                        <div class="small-cube-face small-cube-face--bottom">
+                        <div class="main-cube-face main-cube-face--bottom">
                             bottom
                         </div>
+                        <div class="small-cube1 mini-cube hide">
+                            <div class="small-cube-face small-cube-face--front">
+                                front
+                            </div>
+                            <div class="small-cube-face small-cube-face--back">
+                                back
+                            </div>
+                            <div class="small-cube-face small-cube-face--right">
+                                right
+                            </div>
+                            <div class="small-cube-face small-cube-face--left">
+                                let
+                            </div>
+                            <div class="small-cube-face small-cube-face--top">
+                                top
+                            </div>
+                            <div class="small-cube-face small-cube-face--bottom">
+                                bottom
+                            </div>
+                        </div>
+    
                     </div>
-
+    
                 </div>
-
+                <div class= " rotate-arrow rotate-right" id="rotateRight"></div>
+                <div class= " rotate-arrow rotate-top" id="rotateTop"></div>
+                <div class= " rotate-arrow rotate-left" id="rotateLeft"></div>
+                <div class= " rotate-arrow rotate-bottom" id="rotateBottom"></div>
             </div>
-            <div class= " rotate-arrow rotate-right" id="rotateRight"></div>
-            <div class= " rotate-arrow rotate-top" id="rotateTop"></div>
-            <div class= " rotate-arrow rotate-left" id="rotateLeft"></div>
-            <div class= " rotate-arrow rotate-bottom" id="rotateBottom"></div>
-        </div>
-        <button class="to-right">
-            Right
-        </button>
-        <button class="to-left">
-            Left
-        </button>
-        <button class="to-top">
-            Top
-        </button>
-        <button class="to-bottom">
-            Bottom
-        </button>
+        </section>
+      
+      
         
     </main>
     <footer></footer>

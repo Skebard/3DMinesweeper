@@ -2,8 +2,177 @@
     box-sizing:border-box;
     margin:0;
     padding:0;
+    color:white;
+    font-family: verdana;
+}
+img,
+label,
+input{
+    display:block;
+}
+ul{
+    list-style-type:none;
 }
 
+body{
+    position:relative;
+    min-height:100vh;
+    width:100%;
+    padding-bottom: 5rem;
+    background-color:rgb(31, 27, 68);
+}
+
+header{
+    position:relative;
+    width:100%;
+    height:5rem;
+    border:1px solid black;
+    display:flex;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+}
+.logo{
+    margin-left:2rem;
+    flex-shrink: 0;
+    font-family:verdana;
+    font-size: 3rem;
+    font-weight:bold;
+    color: #f5f5f5;
+    text-shadow: 1px 1px 1px #919191,
+    1px 2px 1px #919191,
+    1px 3px 1px #919191,
+    1px 4px 1px #919191,
+    1px 5px 1px #919191,
+    1px 6px 1px #919191,
+    1px 7px 1px #919191,
+    1px 8px 1px #919191,
+    1px 9px 1px #919191,
+    1px 10px 1px #919191,
+1px 18px 6px rgba(16,16,16,0.4),
+1px 22px 10px rgba(16,16,16,0.2),
+1px 25px 35px rgba(16,16,16,0.2),
+1px 30px 60px rgba(16,16,16,0.4);
+}
+
+.language-menu{
+    display:flex;
+    margin-top:0.5rem;
+    margin-right: 0.5rem;
+}
+.flag{
+    width:38px;
+    height: 26px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    margin:0.2rem;
+}
+.flag > img{
+    width: 34px;
+    height: 20px;
+    border-radius: 5px;
+}
+.flag > img:hover{
+    width:38px;
+    height:23px;
+    border-radius: 7px;
+    cursor:pointer;
+    opacity:0.7;
+}
+
+
+/*********** MAIN MENU *************/
+.main-menu{
+    display:flex;
+    width:100%;
+    height:100%;
+    position:relative;
+    justify-content:center;
+    overflow-x:hidden;
+}
+form > button{
+    width:100%;
+    padding:1rem;
+    font-size:1rem;
+    font-weight:bold;
+}
+.user-menu-container{
+    height:100%;
+    width:70%;
+    border: 1px solid white;
+}
+.user-menu{
+    width:70%;
+}
+.user-menu-content{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    height:300px;
+    width:100%;
+    border: 1px solid red;
+    background-color:white;
+}
+.user-menu-content *{
+    color:black;
+}
+.user-options > li{
+    font-weight:bold;
+    text-shadow: 1px 1px 1px #919191,
+    1px 2px 1px #919191,
+
+1px 4px 3px rgba(16,16,16,0.4),
+1px 6px 5px rgba(16,16,16,0.2),
+1px 8px 17px rgba(16,16,16,0.2),
+1px 10px 30px rgba(16,16,16,0.4);
+}
+
+
+.selected{
+    background-color:white;
+    color:rgb(31, 27, 68);
+
+}
+.register{
+
+}
+.log-in{
+
+}
+
+.user-options{
+    display:flex;
+    width:100%;
+}
+.user-options > li{
+    flex-grow:2;
+    flex-shrink:0;
+    padding:1rem;
+    border-right: 1px solid white;
+    cursor:pointer;
+    text-align:center;
+}
+.ranking{
+    position:absolute;
+    right:-29%;
+    width:30%;
+    height:100%;
+    border: 1px solid white;
+    max-height:100%;
+    overflow-y:auto;
+}
+
+
+footer{
+    position:absolute;
+    width: 100%;
+    height:5rem;
+    bottom:0;
+    left:0;
+    border:1px solid black;
+}
 
 /****** MAIN STYLES ******/
 .hide{
@@ -11,14 +180,7 @@
 }
 
 
-button{
-    margin-top:1rem;
-    width:20%;
-    margin-left: 5%;
-    display:block;
-    float:left;
-    padding: 1rem 0;
-}
+
 
 .main-board{
     display:flex;

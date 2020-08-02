@@ -15,11 +15,57 @@ let arrowRight = document.getElementById("rotateRight");
 let arrowTop = document.getElementById("rotateTop");
 let arrowLeft = document.getElementById("rotateLeft");
 let arrowBottom = document.getElementById("rotateBottom");
+let registerForm = document.getElementById("registration-form");
+let logInForm = document.getElementById("log-in-form");
+let guestForm = document.getElementById("guest-form");
+let selectRegister = document.getElementById("select-register");
+let selectLogIn = document.getElementById("select-log-in");
+let selectGuest = document.getElementById("select-guest");
+
 
 //game variables
 let totalMines;
 let openedCubes;
 let totalCubes;
+
+// Forms management
+selectRegister.addEventListener("click",()=>{
+    addClassToElement(selectRegister,"selected");
+    removeClassElement(selectLogIn,"selected");
+    removeClassElement(selectGuest,"selected");
+    removeClassElement(registerForm,"hide");
+    addClassToElement(logInForm,"hide");
+    addClassToElement(guestForm,"hide");
+});
+selectLogIn.addEventListener("click",()=>{
+    removeClassElement(selectRegister,"selected");
+    addClassToElement(selectLogIn,"selected");
+    removeClassElement(selectGuest,"selected");
+    removeClassElement(logInForm,"hide");
+    addClassToElement(registerForm,"hide");
+    addClassToElement(guestForm,"hide");
+});
+selectGuest.addEventListener("click",()=>{
+    removeClassElement(selectRegister,"selected");
+    removeClassElement(selectLogIn,"selected");
+    addClassToElement(selectGuest,"selected");
+    removeClassElement(guestForm,"hide");
+    addClassToElement(registerForm,"hide");
+    addClassToElement(logInForm,"hide");
+});
+
+function addClassToElement(form,klass){
+    if(!form.classList.contains(klass)){
+        form.classList.add(klass);
+    }
+}
+function removeClassElement(form,klass){
+    if(form.classList.contains(klass)){
+        form.classList.remove(klass);
+    }
+}
+
+
 
 arrowRight.addEventListener("mousedown",()=>{
     eventRotate(rotateY,-1,arrowRight);
@@ -99,45 +145,6 @@ function endGame(board) {
         });
     });
 }
-
-
-
-//  "matrix3d(0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -100, 1)"
-/*** test */
-document.querySelector(".to-right").addEventListener('click', rotateRight);
-document.querySelector(".to-left").addEventListener('click', rotateLeft);
-document.querySelector(".to-top").addEventListener('click', rotateTop);
-document.querySelector(".to-bottom").addEventListener('click', rotateBottom);
-let boxRotation = {
-    axesY: 0,
-    axesX: 0
-}
-
-function rotateRight() {
-    boxRotation.axesY = (boxRotation.axesY - 90) % 360;
-    console.log(" translateZ(-100px) rotateY(" + boxRotation.axesY + "deg)" + " rotateX(" + boxRotation.axesX + "deg)");
-    mainCube.style.transform = " translateZ(-100px) rotateY(" + boxRotation.axesY + "deg)" + " rotateX(" + boxRotation.axesX + "deg)";
-}
-
-function rotateLeft() {
-    boxRotation.axesY = (boxRotation.axesY + 90) % 360;
-    console.log(" translateZ(-100px) rotateY(" + boxRotation.axesY + "deg)" + " rotateX(" + boxRotation.axesX + "deg)");
-    mainCube.style.transform = " translateZ(-100px) rotateY(" + boxRotation.axesY + "deg)" + " rotateX(" + boxRotation.axesX + "deg)";
-}
-
-function rotateTop() {
-    boxRotation.axesX = (boxRotation.axesX - 90) % 360;
-    console.log(" translateZ(-100px) rotateX(" + boxRotation.axesX + "deg)" + " rotateY(" + boxRotation.axesY + "deg)");
-    mainCube.style.transform = " translateZ(-100px) rotateX(" + boxRotation.axesX + "deg)" + " rotateY(" + boxRotation.axesY + "deg)";
-}
-
-function rotateBottom() {
-    boxRotation.axesX = (boxRotation.axesX + 90) % 360;
-    console.log(" translateZ(-100px) rotateX(" + boxRotation.axesX + "deg)" + " rotateY(" + boxRotation.axesY + "deg)");
-    mainCube.style.transform = " translateZ(-100px) rotateX(" + boxRotation.axesX + "deg)" + " rotateY(" + boxRotation.axesY + "deg)";
-}
-
-
 
 
 
