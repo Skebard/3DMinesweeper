@@ -8,6 +8,8 @@ const ROTATE_INTERVAL = 2;
 const USERNAME_REGEX = /^[a-zA-Z0-9]+$/;
 const PASSWORD_REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const CHECK_ICON = '<i class="far fa-check-circle my-check label-icon"></i>';
+const CROSS_ICON = '<i class="far fa-times-circle my-cross label-icon"></i>';
 
 //HTML elements
 let mainBoard = document.querySelector(".main-board");
@@ -27,6 +29,10 @@ let selectGuest = document.getElementById("select-guest");
 let btnRegister = document.getElementById("btn-register");
 let btnLogIn = document.getElementById("btn-logIn");
 let btnGuest = document.getElementById("btn-guest");
+let menuCube = document.querySelector(".main-menu-cube");
+let btnModeNormal =document.getElementById("mode-normal");
+let btnModeHard = document.getElementById("mode-hard");
+let btnModeCustom = document.getElementById("mode-custom");
 
 
 
@@ -66,6 +72,12 @@ selectGuest.addEventListener("click", () => {
     addClassToElement(registerForm, "hide");
     addClassToElement(logInForm, "hide");
 });
+
+
+// Choosing game mode
+btnModeNormal.addEventListener("click",)
+
+
 
 function addClassToElement(form, klass) {
     if (!form.classList.contains(klass)) {
@@ -131,14 +143,16 @@ function Match() {
 
 btnRegister.addEventListener("click", () => {
     let currentForm = document.querySelector("#registration-form > form");
-    checkFormInputs(currentForm);
+    currentUser = checkFormInputs(currentForm);
 });
 btnLogIn.addEventListener("click", () => {
     let currentForm = document.querySelector("#log-in-form > form");
-    checkFormInputs(currentForm);
+    currentUser = checkFormInputs(currentForm);
 });
 
-btnGuest.addEventListener("click", newGuest);
+btnGuest.addEventListener("click", ()=>{
+    currentUser = newGuest();
+});
 //check if the inputs of the form are correct and if so stores the information in a new user object
 function checkFormInputs(form) {
     let verifiedFields = 0;
@@ -146,27 +160,34 @@ function checkFormInputs(form) {
     let password;
     let email;
     let inputs = form.querySelectorAll("input");
+    let labels = form.querySelectorAll("label");
     if ((inputs[0].value.length > 4) && (USERNAME_REGEX.test(inputs[0].value))) {
         username = inputs[0].value;
         verifiedFields++;
+        labels[0].innerHTML = "Choose your username"+CHECK_ICON;
     } else {
         //error
+        labels[0].innerHTML = "Choose your username"+ CROSS_ICON;
         console.log("error username");
     }
 
     if (PASSWORD_REGEX.test(inputs[1].value)) {
         password = inputs[1].value;
         verifiedFields++;
+        labels[1].innerHTML = "Password"+ CHECK_ICON;
     } else {
         //error
+        labels[1].innerHTML = "Password"+ CROSS_ICON;
         console.log("error pass");
     }
 
     if (inputs[2] !== undefined) {
         if (password === inputs[2].value) {
             verifiedFields++; // if password is undefined it will enter but doesn't matter
+            labels[2].innerHTML = "Confirm password"+ CHECK_ICON;
         } else {
             //error  passwords do not match
+            labels[2].innerHTML = "Confirm password"+ CROSS_ICON;
             console.log("error conf pass");
         }
     }
@@ -175,9 +196,11 @@ function checkFormInputs(form) {
         if (EMAIL_REGEX.test(inputs[3].value)) {
             email = inputs[3].value;
             verifiedFields++;
+            labels[3].innerHTML = "Email"+ CHECK_ICON;
 
         } else {
             //error
+            labels[3].innerHTML = "Email"+ CROSS_ICON;
             console.log("error email")
         }
     }
@@ -187,12 +210,21 @@ function checkFormInputs(form) {
         console.log("all good");
         switch (inputs.length) {
             case 2: // log in
+                console.log(logInUser(username, password));
+                if(logInUser(username, password)!==false){
+                    rotateY(menuCube,-90);
+                    console.log("rotate");
+                }else{
+                    labels[0].innerHTML = "Choose your username"+ CROSS_ICON;
+                    labels[1].innerHTML = "Password"+ CROSS_ICON;
+                }
                 return logInUser(username, password);
             case 4: //register new user
                 let error = 0;
                 users.forEach(user => {
                     if (user.username === username) {
                         console.log("usernam already exists");
+                        
                         error++;
                     }
                     if (user.email === email) {
@@ -203,7 +235,7 @@ function checkFormInputs(form) {
                 if (error > 0) {
                     return false;
                 }
-
+                rotateY(menuCube,-90);
                 newUser = new User(false, username, password, email);
                 users.push(newUser);
                 console.log(newUser);
@@ -219,31 +251,32 @@ function checkFormInputs(form) {
 }
 
 function logInUser(username, password) {
+    let match = false;
+    let foundUser;
     users.forEach((user) => {
-        if (user.username = username) {
+        console.log("username: " +user.username);
+       
+        if (user.username === username) {
+            console.log(user.verifyPassword(password));
             if (user.verifyPassword(password)) {
-                return user;
-            } else {
-                return false;
+                console.log("match");
+                match=true;
+                foundUser = user;
             }
         }
     });
-    return false;
+    
+    return (match===true)? foundUser: false;
 }
 
 function newGuest() {
+    rotateY(menuCube,-90);
     let newUser = new User(true, "A_" + new Date().getTime().toString().slice(-10));
     users.push(newUser);
     console.log(newUser);
     return newUser;
 
 }
-
-
-
-
-
-
 
 
 

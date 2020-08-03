@@ -33,6 +33,20 @@ header{
     justify-content: space-between;
     flex-wrap: nowrap;
 }
+
+.label-icon{
+    position:absolute;
+    right:-0.5rem;
+    bottom: 0 ;
+    font-size:1.3rem;
+}
+form .my-check{
+    color:green;
+}
+form .my-cross{
+    color:red;
+}
+
 .logo{
     -moz-user-select: none; /* Firefox */
     -ms-user-select: none; /* Internet Explorer */
@@ -106,7 +120,6 @@ header{
     height:100%;
     position:relative;
     justify-content:center;
-    overflow-x:hidden;
     margin-top:2rem;
 }
 form > button{
@@ -121,6 +134,7 @@ form > button{
 }
 .user-menu{
     width:100%;
+    height:100%;
 }
 .user-menu-content{
     display:flex;
@@ -128,8 +142,8 @@ form > button{
     justify-content:center;
     align-items:center;
     width:100%;
+    height:85%;
     background-color:white;
-    padding: 1rem 0;
 }
 .user-menu-content *{
     color:black;
@@ -142,6 +156,8 @@ form > button{
     font-weight:bold;
     margin-bottom:0.2rem;
     margin-top:1rem;
+    padding-right:1rem;
+    position:relative;
 }
 .user-menu-content button{
     margin-top:1rem;
@@ -171,24 +187,67 @@ form > button{
     color:rgb(31, 27, 68);
 
 }
-.register{
-
-}
-.log-in{
-
-}
 
 .user-options{
     display:flex;
     width:100%;
+    height:15%;
 }
 .user-options > li{
     flex-grow:2;
     flex-shrink:0;
     padding:1rem;
     cursor:pointer;
-    text-align:center;
+    display:flex;
+    justify-content:center;
+    align-items:center;
 }
+
+.game-options-container{
+    width:100%;
+    height:100%;
+    background-color:white;
+}
+.game-options-container ul{
+    height:35%;
+    display:flex;
+    justify-content:space-around;
+    align-items:center;
+    font-size:1.3rem;
+}
+.game-options-container *{
+    color:black;
+}
+.game-difficulty > li {
+    border:2px solid black;
+    border-radius: 0.2rem;
+    padding:1rem;
+    transition: all 0.5s;
+    cursor: pointer;
+    margin-top:5rem;
+}
+.game-difficulty > li:hover{
+    background-color:orange;
+}
+
+.game-options-container input{
+    width: 3rem;
+    font-size:1.2rem;
+    
+}
+
+.game-options-container button{
+    padding:1rem 2rem;
+    font-size:1.2rem;
+}
+
+.game-difficulty li.selected-mode{
+    background-color:orangered;
+}
+
+
+
+
 .ranking{
     position:absolute;
     right:-0%;
@@ -244,19 +303,59 @@ footer{
     border:1px solid black;
 }
 
-
-.scene-ranking{
-    width: 100px;
-    height: 100px;
+/***** MENU CUBE ******/
+.scene-main-menu{
+    width: 450px;
+    height: 450px;
     perspective:400px;
-    position:absolute;
+    position:relative;
 }
-.ranking-cube{
+.main-menu-cube{
     width:100%;
     height:100%;
     position:relative;
     transform-style:preserve-3d;
-    transform: translateZ(-50);
+    transform: translateZ(-225px);
+    transition: all 2.5s;
+}
+.menu-cube-face{
+    position:absolute;
+    width:450px;
+    height:450px;
+    border: 2px solid black;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+    display:bock;
+   
+}
+
+
+.menu-cube-face--front  {
+    transform: rotateY(  0deg) translateZ(225px);
+    background: hsla(  0, 100%, 50%, 0.7);
+
+    display:block;
+}
+.menu-cube-face--right  {
+    transform: rotateY( 90deg) translateZ(225px);
+    background: hsla( 60, 100%, 50%, 0.7);
+}
+.menu-cube-face--back   {
+    transform: rotateY(180deg) translateZ(225px);
+    background: hsla(120, 100%, 50%, 0.7);
+}
+.menu-cube-face--left   {
+    transform: rotateY(-90deg) translateZ(225px);
+    background: hsla(180, 100%, 50%, 0.7);
+}
+.menu-cube-face--top    {
+    transform: rotateX( 90deg) translateZ(225px);
+    background: hsla(240, 100%, 50%, 0.7);
+}
+.menu-cube-face--bottom {
+    transform: rotateX(-90deg) translateZ(225px);
+    background: hsla(300, 100%, 50%, 0.7);
 }
 
 /****** MAIN STYLES ******/
@@ -309,15 +408,15 @@ footer{
     color: white;
     text-align: center;
     pointer-events: none;
-    display:none;
+    display:bock;
 
 }
 
 .main-cube-face--front  {
     transform: rotateY(  0deg) translateZ(100px);
     background: hsla(  0, 100%, 50%, 0.7);
-    background-color:transparent;
-    display:none;
+
+    display:block;
 }
 .main-cube-face--right  {
     transform: rotateY( 90deg) translateZ(100px);

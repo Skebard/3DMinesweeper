@@ -31,56 +31,95 @@
     </header>
     <div class="dark-background hide">
     </div>
-    <div class="scene-ranking">
-        <div class="ranking-cube">
-            
-        </div>
 
-    </div>
     <main>
         <section class="intro hide">
 
         </section>
-        <section class="main-menu">
-            <div class="user-menu-container">
-                <div class="user-menu">
-                    <ul class="user-options">
-                        <li class="selected" id="select-register">Register</li>
-                        <li id="select-log-in">Log in</li>
-                        <li id="select-guest">Play as a guest</li>
-                    </ul>
-                    <div class="user-menu-content" id="registration-form" >
-                        <form >
-                            <label for="username">Choose your username</label>
-                            <input type="text" id="username" name="username">
-                            <label for="password">Password</label>
-                            <input type="password" id="password" name="password">
-                            <label for="password-again">Confirm password</label>
-                            <input type="password" id="password-again" name="password-again">
-                            <label for="email">Email</label>
-                            <input type="text" id="email" name="email">
-                            <button type="button" id="btn-register">PLAY</button>
-                        </form>
-                    </div>
-                    <div class="user-menu-content hide" id="log-in-form">
-                        <form >
-                            <label for="username">Choose your username</label>
-                            <input type="text" id="username" name="username">
-                            <label for="password">Password</label>
-                            <input type="password" id="password" name="password">
-                            <button type="button" id="btn-logIn">PLAY</button>
-                        </form>
+        <section class="main-menu ">
+            <div class="scene-main-menu ">
+                <div class="main-menu-cube">
+                    <div class="menu-cube-face menu-cube-face--front">
+                        <div class="user-menu-container">
+                            <div class="user-menu">
+                                <ul class="user-options">
+                                    <li class="selected" id="select-register">Register</li>
+                                    <li id="select-log-in">Log in</li>
+                                    <li id="select-guest">Play as a guest</li>
+                                </ul>
+                                <div class="user-menu-content" id="registration-form">
+                                    <form>
+                                        <label for="usernameR">Choose your username</label>
+                                        <input type="text" id="usernameR" name="usernameR">
+                                        <label for="passwordR">Password</label>
+                                        <input type="password" id="passwordR" name="passwordR">
+                                        <label for="password-againR">Confirm password</label>
+                                        <input type="password" id="password-againR" name="password-againR">
+                                        <label for="emailR">Email</label>
+                                        <input type="text" id="emailR" name="emailR">
+                                        <button type="button" id="btn-register">ENTER</button>
+                                    </form>
+                                </div>
+                                <div class="user-menu-content hide" id="log-in-form">
+                                    <form>
+                                        <label for="username">Choose your username</label>
+                                        <input type="text" id="username" name="username">
+                                        <label for="password">Password</label>
+                                        <input type="password" id="password" name="password">
+                                        <button type="button" id="btn-logIn">ENTER</button>
+                                    </form>
 
+                                </div>
+                                <div class="play-guest user-menu-content hide" id="guest-form">
+                                    <form>
+                                        <button type="button" id="btn-guest">ENTER</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="play-guest user-menu-content hide"  id="guest-form" >
-                        <form>
-                            <label for="username">Choose your username</label>
-                            <input type="text" id="username" name="username">
-                            <button type="button" id="btn-guest">PLAY</button>
-                        </form>
+                    <div class="menu-cube-face menu-cube-face--back">
+                        back
+                    </div>
+                    <div class="menu-cube-face menu-cube-face--right">
+                        right
+                    </div>
+                    <div class="menu-cube-face menu-cube-face--left">
+                        <div class="game-options-container">
+                            <ul class="game-difficulty">
+                                <li class="selected-mode" id="mode-normal">Normal</li>
+                                <li id="mode-hard">Hard</li>
+                                <li id="mode-custom">Custom</li>
+                            </ul>
+                            <ul>
+                                <li>
+                                    <label for="board-size">Size</label>
+                                    <input type="number" id="board-size" name="board-size" min="2" max="15">
+                                </li>
+                                <li>
+                                    <label for="total-mines">Mines</label>
+                                    <input type="number" id="total-mines" name="total-mines" min="1">
+
+                                </li>
+                            </ul>
+                            <button type="button" id="btn-game-options">
+                                PLAY
+                            </button>
+
+
+                        </div>
+                    </div>
+                    <div class="menu-cube-face menu-cube-face--top">
+                        top
+                    </div>
+                    <div class="menu-cube-face menu-cube-face--bottom">
+                        bottom
                     </div>
                 </div>
             </div>
+
+
+
             <div class="ranking hide">
                 <dl>
                     <dt class="gold-trophy">
