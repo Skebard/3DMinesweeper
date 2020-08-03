@@ -30,7 +30,7 @@ let btnRegister = document.getElementById("btn-register");
 let btnLogIn = document.getElementById("btn-logIn");
 let btnGuest = document.getElementById("btn-guest");
 let menuCube = document.querySelector(".main-menu-cube");
-let btnModeNormal =document.getElementById("mode-normal");
+let btnModeNormal = document.getElementById("mode-normal");
 let btnModeHard = document.getElementById("mode-hard");
 let btnModeCustom = document.getElementById("mode-custom");
 let selectSize = document.getElementById("board-size");
@@ -43,6 +43,10 @@ let btnPlayAgain = document.getElementById("btn-play-again");
 let btnNewGame = document.getElementById("btn-new-game");
 let menuEnd = document.getElementById("menu-end");
 let darkBackground = document.getElementById("dark-background-id");
+let logInHeader = document.getElementById("user-profile");
+let usernameHeader = document.getElementById("username-header");
+let logInIcon = document.getElementById("log-in-icon");
+let logOutIcon = document.getElementById("log-out-icon");
 
 
 //game variables
@@ -57,6 +61,25 @@ let users = [];
 let currentUser;
 
 
+//todo DEFAULT USERS
+
+users.push(new User(false,"Antonio","1234asdfA",false));
+
+
+//todo EVENT LISTENERS
+
+//Start game
+btnStartGame.addEventListener("click", startGame);
+
+
+//Finishing game
+btnPlayAgain.addEventListener("click", playAgain);
+btnNewGame.addEventListener("click", newGame);
+
+//log out 
+logOutIcon.addEventListener("click",logOut);
+
+
 // Forms management
 selectRegister.addEventListener("click", () => {
     addClassToElement(selectRegister, "selected");
@@ -66,13 +89,22 @@ selectRegister.addEventListener("click", () => {
     addClassToElement(logInForm, "hide");
     addClassToElement(guestForm, "hide");
 });
-selectLogIn.addEventListener("click", () => {
-    removeClassElement(selectRegister, "selected");
-    addClassToElement(selectLogIn, "selected");
-    removeClassElement(selectGuest, "selected");
-    removeClassElement(logInForm, "hide");
-    addClassToElement(registerForm, "hide");
-    addClassToElement(guestForm, "hide");
+selectLogIn.addEventListener("click", displayLogIn);
+logInHeader.addEventListener("click", ()=>{
+    displayLogIn();
+
+    if(gameScreen.classList.contains("hide")){
+            menuCube.style.transform = "translateZ(-225px) rotateY(0)";
+            users.pop();
+    }else if(menuEnd.classList.contains("hide")===false){
+        if(currentUser.matches.lengh===0){
+            users.pop()
+        }
+        
+        showMainMenu();
+    }
+    
+
 });
 selectGuest.addEventListener("click", () => {
     removeClassElement(selectRegister, "selected");
@@ -83,69 +115,104 @@ selectGuest.addEventListener("click", () => {
     addClassToElement(logInForm, "hide");
 });
 
-
 // Choosing game mode
-btnModeNormal.addEventListener("click",()=>{
+btnModeNormal.addEventListener("click", () => {
     addClassToElement(btnModeNormal, "selected-mode");
     removeClassElement(btnModeHard, "selected-mode");
     removeClassElement(btnModeCustom, "selected-mode");
     selectSize.value = 5;
     selectMines.value = 10;
-    removeClassElement(blockSelectSizeMines,"hide");
-
+    removeClassElement(blockSelectSizeMines, "hide");
 });
-btnModeHard.addEventListener("click",()=>{
+btnModeHard.addEventListener("click", () => {
     addClassToElement(btnModeHard, "selected-mode");
     removeClassElement(btnModeNormal, "selected-mode");
     removeClassElement(btnModeCustom, "selected-mode");
     selectSize.value = 8;
     selectMines.value = 25;
-    removeClassElement(blockSelectSizeMines,"hide");
+    removeClassElement(blockSelectSizeMines, "hide");
 });
-btnModeCustom.addEventListener("click",()=>{
+btnModeCustom.addEventListener("click", () => {
     addClassToElement(btnModeCustom, "selected-mode");
     removeClassElement(btnModeHard, "selected-mode");
     removeClassElement(btnModeNormal, "selected-mode");
-    addClassToElement(blockSelectSizeMines,"hide");
+    addClassToElement(blockSelectSizeMines, "hide");
+});
 
+// User menu
+btnRegister.addEventListener("click", () => {
+    let currentForm = document.querySelector("#registration-form > form");
+    currentUser = checkFormInputs(currentForm);
+});
+btnLogIn.addEventListener("click", () => {
+    let currentForm = document.querySelector("#log-in-form > form");
+    currentUser = checkFormInputs(currentForm);
+});
+btnGuest.addEventListener("click", () => {
+    currentUser = newGuest();
 });
 
 
-//Start game
-btnStartGame.addEventListener("click",startGame);
+//Rotate cube
+arrowRight.addEventListener("mousedown", () => {
+    eventRotate(rotateY, -1, arrowRight);
+});
+arrowTop.addEventListener("mousedown", () => {
+    eventRotate(rotateX, -1, arrowTop);
+});
+arrowLeft.addEventListener("mousedown", () => {
+    eventRotate(rotateY, 1, arrowLeft);
+});
+arrowBottom.addEventListener("mousedown", () => {
+    eventRotate(rotateX, 1, arrowBottom);
+});
 
-//Finishing game
-btnPlayAgain.addEventListener("click",playAgain);
-btnNewGame.addEventListener("click",newGame);
 
+function showMainMenu(){
+    menuCube.style.transform = "translateZ(-225px) rotateY(0)";
+    mainMenuScreen.classList.remove("hide");
+    gameScreen.classList.add("hide");
+    menuEnd.classList.add("hide");
+    darkBackground.classList.add("hide");
+}
 
+function logOut(){
+    logOutIcon.classList.add("hide");
+    logInIcon.classList.remove("hide");
+    usernameHeader.classList.add("hide");
+    logInHeader.classList.remove("hide");
+    showMainMenu();
 
-function startGame(){
+}
+
+function displayLogIn() {
+    removeClassElement(selectRegister, "selected");
+    addClassToElement(selectLogIn, "selected");
+    removeClassElement(selectGuest, "selected");
+    removeClassElement(logInForm, "hide");
+    addClassToElement(registerForm, "hide");
+    addClassToElement(guestForm, "hide");
+}
+
+function startGame() {
     // if mode custom check size and mines
-    if((selectSize.value==="") || (parseInt(selectSize.value)<2) || (parseInt(selectSize.value) > 15)){
+    if ((selectSize.value === "") || (parseInt(selectSize.value) < 2) || (parseInt(selectSize.value) > 15)) {
         //error
         console.log("size is wrong");
         return false;
-    }else{
-        if( (parseInt(selectMines.value) >= Math.pow(parseInt(selectSize.value),3))|| (selectMines.value==="") || (parseInt(selectMines.value) <1)){
+    } else {
+        if ((parseInt(selectMines.value) >= Math.pow(parseInt(selectSize.value), 3)) || (selectMines.value === "") || (parseInt(selectMines.value) < 1)) {
             //error
             console.log("number of mines wrong");
             return false;
         }
     }
-
     console.log("game starts!!");
-
-    createBoard(selectSize.value,selectMines.value);
-    addClassToElement(mainMenuScreen,"hide");
-    removeClassElement(gameScreen,"hide");
+    createBoard(selectSize.value, selectMines.value);
+    mainMenuScreen.classList.add("hide");
+    gameScreen.classList.remove("hide");
     //pass to next screen
 }
-
-
-
-
-
 
 
 
@@ -165,25 +232,250 @@ function removeClassElement(form, klass) {
 
 
 
-//Rotate cube
-arrowRight.addEventListener("mousedown", () => {
-    eventRotate(rotateY, -1, arrowRight);
-});
-arrowTop.addEventListener("mousedown", () => {
-    eventRotate(rotateX, -1, arrowTop);
-});
-arrowLeft.addEventListener("mousedown", () => {
-    eventRotate(rotateY, 1, arrowLeft);
-});
-arrowBottom.addEventListener("mousedown", () => {
-    eventRotate(rotateX, 1, arrowBottom);
-});
+
+
+function showCurrentUser(user){
+        logInHeader.classList.add("hide");
+        usernameHeader.innerHTML = user.username;
+        usernameHeader.classList.remove("hide");
+        logInIcon.classList.add("hide");
+        logOutIcon.classList.remove("hide");
+}
 
 
 
 
 
-//todo Users management functions
+
+
+
+
+
+
+
+//check if the inputs of the form are correct and if so stores the information in a new user object
+function checkFormInputs(form) {
+    let verifiedFields = 0;
+    let username;
+    let password;
+    let email;
+    let inputs = form.querySelectorAll("input");
+    let labels = form.querySelectorAll("label");
+    if ((inputs[0].value.length > 4) && (USERNAME_REGEX.test(inputs[0].value))) {
+        username = inputs[0].value;
+        verifiedFields++;
+        labels[0].innerHTML = "Choose your username" + CHECK_ICON;
+    } else {
+        //error
+        labels[0].innerHTML = "Choose your username" + CROSS_ICON;
+        console.log("error username");
+    }
+
+    if (PASSWORD_REGEX.test(inputs[1].value)) {
+        password = inputs[1].value;
+        verifiedFields++;
+        labels[1].innerHTML = "Password" + CHECK_ICON;
+    } else {
+        //error
+        labels[1].innerHTML = "Password" + CROSS_ICON;
+        console.log("error pass");
+    }
+
+    if (inputs[2] !== undefined) {
+        if (password === inputs[2].value) {
+            verifiedFields++; // if password is undefined it will enter but doesn't matter
+            labels[2].innerHTML = "Confirm password" + CHECK_ICON;
+        } else {
+            //error  passwords do not match
+            labels[2].innerHTML = "Confirm password" + CROSS_ICON;
+            console.log("error conf pass");
+        }
+    }
+
+    if (inputs[3] !== undefined) {
+        if (EMAIL_REGEX.test(inputs[3].value)) {
+            email = inputs[3].value;
+            verifiedFields++;
+            labels[3].innerHTML = "Email" + CHECK_ICON;
+
+        } else {
+            //error
+            labels[3].innerHTML = "Email" + CROSS_ICON;
+            console.log("error email")
+        }
+    }
+
+    if (inputs.length === verifiedFields) {
+        let newUser;
+        console.log("all good");
+        switch (inputs.length) {
+            case 2: // log in
+                console.log(logInUser(username, password));
+                if (logInUser(username, password) !== false) {
+                    rotateY(menuCube, -90);
+                    console.log("rotate");
+                    showCurrentUser(logInUser(username, password));
+                } else {
+                    labels[0].innerHTML = "Choose your username" + CROSS_ICON;
+                    labels[1].innerHTML = "Password" + CROSS_ICON;
+                }
+                return logInUser(username, password);
+            case 4: //register new user
+                let error = 0;
+                users.forEach(user => {
+                    if (user.username === username) {
+                        console.log("usernam already exists");
+
+                        error++;
+                    }
+                    if (user.email === email) {
+                        console.log("email already exists");
+                        error++;
+                    }
+                });
+                if (error > 0) {
+                    return false;
+                }
+                rotateY(menuCube, -90);
+                newUser = new User(false, username, password, email);
+                users.push(newUser);
+                console.log(newUser);
+                showCurrentUser(newUser);
+                return newUser;
+                break;
+            default:
+                break;
+        }
+    } else {
+        console.log("somt wrong");
+        return false;
+    }
+}
+
+function logInUser(username, password) {
+    let match = false;
+    let foundUser;
+    users.forEach((user) => {
+        console.log("username: " + user.username);
+
+        if (user.username === username) {
+            console.log(user.verifyPassword(password));
+            if (user.verifyPassword(password)) {
+                console.log("match");
+                match = true;
+                foundUser = user;
+            }
+        }
+    });
+
+    return (match === true) ? foundUser : false;
+}
+
+function newGuest() {
+    rotateY(menuCube, -90);
+    let newUser = new User(true, "A_" + new Date().getTime().toString().slice(-10));
+    users.push(newUser);
+    console.log(newUser);
+    return newUser;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function openCube(event, board) {
+    let cubeIndex = event.currentTarget.id;
+    cubeIndex = cubeIndex.replace("-", ""); // remove the slash from small-cube
+
+    let currentDash = cubeIndex.indexOf("-");
+    cubeIndex = cubeIndex.replace("-", "");
+    let nextDash = cubeIndex.indexOf("-");
+    let plane = cubeIndex.slice(currentDash, nextDash);
+
+    currentDash = nextDash;
+    cubeIndex = cubeIndex.replace("-", "");
+    nextDash = cubeIndex.indexOf("-");
+    let row = cubeIndex.slice(currentDash, nextDash);
+
+    currentDash = nextDash;
+    cubeIndex = cubeIndex.replace("-", "");
+    let col = cubeIndex.slice(currentDash);
+
+    //let [plane, row, col] = event.currentTarget.id.slice(-3).split(""); // only works with board of size 10 or smaller
+    let currentCube = board[plane][row][col];
+    let finishedGame = false;
+    if (currentCube.mined === true) {
+        currentCube.showMine();
+        console.log("YOU LOST!!!");
+
+        finishedGame = true;
+    } else {
+        openedCubes++;
+        console.log(currentCube);
+        currentCube.showNeighbourNumber();
+        currentCube.opened = true;
+        revealNeighbours(board, currentCube);
+        if (openedCubes === totalCubes - totalMines) {
+            console.log("YOU WIN!!");
+            let lastMatch = new Match(board.length, totalMines, 75);
+            currentUser.addMatch(lastMatch);
+            finishedGame = true;
+        }
+    }
+    if (finishedGame) {
+        //endGame(board);
+        removeClassElement(menuEnd, "hide");
+        removeClassElement(darkBackground, "hide");
+        endGame(currentBoard);
+        openedCubes = 0;
+       
+    }
+}
+
+// play with the same size
+function playAgain() {
+    //delete old board and create a new one
+    createBoard(currentBoard.length, totalMines);
+    addClassToElement(menuEnd, "hide");
+    addClassToElement(darkBackground, "hide");
+
+}
+
+function newGame() {
+    addClassToElement(menuEnd, "hide");
+    addClassToElement(darkBackground, "hide");
+    removeClassElement(mainMenuScreen, "hide");
+    addClassToElement(gameScreen, "hide");
+}
+
+//remove event listeners and delete small cubes
+function endGame(board) {
+    board.forEach(plane => {
+        plane.forEach(row => {
+            row.forEach(cube => {
+                console.log("remove");
+                cube.removeCube();
+            });
+        });
+    });
+}
+
+
+//todo USER FUNCTIONS
+
 //we supose that one user can make mor that on match
 function User(guest, username, pass = undefined, email = undefined) {
     let password = pass;
@@ -206,288 +498,19 @@ function User(guest, username, pass = undefined, email = undefined) {
             return false;
         }
     }
-    this.addMatch = function(match){
+    this.addMatch = function (match) {
         this.matches.push(match);
     }
-
 }
 
-
-function Match(size,mines,time) {
-    this.score = ((size/3)*mines*10000)/time;
+function Match(size, mines, time) {
+    this.score = ((size / 3) * mines * 10000) / time;
     this.time = time;
     this.size = size;
     this.mines = mines;
-
 }
 
-
-
-// User menu
-btnRegister.addEventListener("click", () => {
-    let currentForm = document.querySelector("#registration-form > form");
-    currentUser = checkFormInputs(currentForm);
-
-});
-btnLogIn.addEventListener("click", () => {
-    let currentForm = document.querySelector("#log-in-form > form");
-    currentUser = checkFormInputs(currentForm);
-});
-
-btnGuest.addEventListener("click", ()=>{
-    currentUser = newGuest();
-});
-
-
-
-
-
-
-//check if the inputs of the form are correct and if so stores the information in a new user object
-function checkFormInputs(form) {
-    let verifiedFields = 0;
-    let username;
-    let password;
-    let email;
-    let inputs = form.querySelectorAll("input");
-    let labels = form.querySelectorAll("label");
-    if ((inputs[0].value.length > 4) && (USERNAME_REGEX.test(inputs[0].value))) {
-        username = inputs[0].value;
-        verifiedFields++;
-        labels[0].innerHTML = "Choose your username"+CHECK_ICON;
-    } else {
-        //error
-        labels[0].innerHTML = "Choose your username"+ CROSS_ICON;
-        console.log("error username");
-    }
-
-    if (PASSWORD_REGEX.test(inputs[1].value)) {
-        password = inputs[1].value;
-        verifiedFields++;
-        labels[1].innerHTML = "Password"+ CHECK_ICON;
-    } else {
-        //error
-        labels[1].innerHTML = "Password"+ CROSS_ICON;
-        console.log("error pass");
-    }
-
-    if (inputs[2] !== undefined) {
-        if (password === inputs[2].value) {
-            verifiedFields++; // if password is undefined it will enter but doesn't matter
-            labels[2].innerHTML = "Confirm password"+ CHECK_ICON;
-        } else {
-            //error  passwords do not match
-            labels[2].innerHTML = "Confirm password"+ CROSS_ICON;
-            console.log("error conf pass");
-        }
-    }
-
-    if (inputs[3] !== undefined) {
-        if (EMAIL_REGEX.test(inputs[3].value)) {
-            email = inputs[3].value;
-            verifiedFields++;
-            labels[3].innerHTML = "Email"+ CHECK_ICON;
-
-        } else {
-            //error
-            labels[3].innerHTML = "Email"+ CROSS_ICON;
-            console.log("error email")
-        }
-    }
-
-    if (inputs.length === verifiedFields) {
-        let newUser;
-        console.log("all good");
-        switch (inputs.length) {
-            case 2: // log in
-                console.log(logInUser(username, password));
-                if(logInUser(username, password)!==false){
-                    rotateY(menuCube,-90);
-                    console.log("rotate");
-                }else{
-                    labels[0].innerHTML = "Choose your username"+ CROSS_ICON;
-                    labels[1].innerHTML = "Password"+ CROSS_ICON;
-                }
-                return logInUser(username, password);
-            case 4: //register new user
-                let error = 0;
-                users.forEach(user => {
-                    if (user.username === username) {
-                        console.log("usernam already exists");
-                        
-                        error++;
-                    }
-                    if (user.email === email) {
-                        console.log("email already exists");
-                        error++;
-                    }
-                });
-                if (error > 0) {
-                    return false;
-                }
-                rotateY(menuCube,-90);
-                newUser = new User(false, username, password, email);
-                users.push(newUser);
-                console.log(newUser);
-                return newUser;
-                break;
-            default:
-                break;
-        }
-    } else {
-        console.log("somt wrong");
-        return false;
-    }
-}
-
-function logInUser(username, password) {
-    let match = false;
-    let foundUser;
-    users.forEach((user) => {
-        console.log("username: " +user.username);
-       
-        if (user.username === username) {
-            console.log(user.verifyPassword(password));
-            if (user.verifyPassword(password)) {
-                console.log("match");
-                match=true;
-                foundUser = user;
-            }
-        }
-    });
-    
-    return (match===true)? foundUser: false;
-}
-
-function newGuest() {
-    rotateY(menuCube,-90);
-    let newUser = new User(true, "A_" + new Date().getTime().toString().slice(-10));
-    users.push(newUser);
-    console.log(newUser);
-    return newUser;
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-function eventRotate(rotateFunction, direction, element) {
-    let smooth = setInterval(function () {
-        rotateFunction(mainCube, ROTATE_INTERVAL * direction);
-    }, 25);
-    element.addEventListener("mouseout", () => {
-        clearInterval(smooth);
-    }, {
-        once: true
-    });
-    element.addEventListener("mouseup", () => {
-        clearInterval(smooth);
-    }, {
-        once: true
-    });
-}
-
-
-
-function openCube(event, board) {
-    let cubeIndex = event.currentTarget.id;
-    cubeIndex = cubeIndex.replace("-",""); // remove the slash from small-cube
-
-    let currentDash = cubeIndex.indexOf("-");
-    cubeIndex = cubeIndex.replace("-","");
-    let nextDash = cubeIndex.indexOf("-");
-    let plane = cubeIndex.slice(currentDash,nextDash);
-
-    currentDash = nextDash;
-    cubeIndex = cubeIndex.replace("-","");
-    nextDash = cubeIndex.indexOf("-");
-    let row = cubeIndex.slice(currentDash,nextDash);
-
-    currentDash = nextDash;
-    cubeIndex = cubeIndex.replace("-","");
-    let col = cubeIndex.slice(currentDash);
-
-    //let [plane, row, col] = event.currentTarget.id.slice(-3).split(""); // only works with board of size 10 or smaller
-    let currentCube = board[plane][row][col];
-    let finishedGame = false;
-    if (currentCube.mined === true) {
-        currentCube.showMine();
-        console.log("YOU LOST!!!");
-        // show you lost
-        // display menu
-        
-        //end game
-        //play again -> choose board
-        //main menu
-        finishedGame = true;
-    } else {
-        openedCubes++;
-        console.log(currentCube);
-        currentCube.showNeighbourNumber();
-        currentCube.opened = true;
-        revealNeighbours(board, currentCube);
-        if (openedCubes === totalCubes - totalMines) {
-            console.log("YOU WIN!!");
-            let lastMatch = new Match(board.length,totalMines,75);
-            currentUser.addMatch(lastMatch);
-            finishedGame = true;
-        }
-    }
-    if(finishedGame){
-
-        //endGame(board);
-        removeClassElement(menuEnd,"hide");
-        removeClassElement(darkBackground,"hide");
-        endGame(currentBoard);
-        openedCubes = 0;
-        //store matc
-
-    }
-
-
-}
-
-// play with the same size
-function playAgain() {
-    //delete old board and create a new one
-    createBoard(currentBoard.length,totalMines);
-    addClassToElement(menuEnd,"hide");
-    addClassToElement(darkBackground,"hide");
-
-}
-function newGame(){
-    addClassToElement(menuEnd,"hide");
-    addClassToElement(darkBackground,"hide");
-
-    removeClassElement(mainMenuScreen,"hide");
-    addClassToElement(gameScreen,"hide");
-}
-
-//remove event listeners and delete small cubes
-function endGame(board) {
-    board.forEach(plane => {
-        plane.forEach(row => {
-            row.forEach(cube => {
-                console.log("remove");
-                cube.removeCube();
-            });
-        });
-    });
-}
-
-
-
-
-
+//todo BOARD CREATION/ACTUALITZATION FUNCTIONS
 
 //create a cube board
 // size(mandatory): size of cube
@@ -508,30 +531,25 @@ function createBoard(size, mines) {
     }
     insertMines(board, mines);
     assignNeighbourMineCount(board);
-
     totalMines = mines;
     totalCubes = size * size * size;
     openedCubes = 0;
-
     let smallCubes = document.querySelectorAll(".mini-cube");
     smallCubes.forEach(cube => {
         cube.addEventListener("click", (event) => {
             openCube(event, board);
         });
     });
-
-
     currentBoard = board;
     console.log(board);
     return board;
-
 }
 
 
 //creates one cube object and positionates it
 function Cube(row, col, depth, cubeSize, totalDepth) {
     let smallCube = document.createElement("div");
-    let idCube = "small-cube"+ "-" + depth + "-" + row + "-" + col;
+    let idCube = "small-cube" + "-" + depth + "-" + row + "-" + col;
     smallCube.classList.add("mini-cube"); // class mini-cube is defined in the css and contains the real size of the cube
     smallCube.id = idCube;
     smallCube.style.transform += "translateX(" + col * cubeSize + "px)";
@@ -578,11 +596,9 @@ function Cube(row, col, depth, cubeSize, totalDepth) {
             myNumber.className = ("small-cube-face " + "small-cube-face--center");
             addedSmallCube.insertAdjacentElement("beforeend", myNumber);
         }
-
         for (let i = 0; i < CUBE_FACES.length; i++) {
             addedSmallCube.children[i].style.display = "none";
         }
-
     }
     this.removeCube = function () {
         addedSmallCube.removeEventListener("click", openCube);
@@ -624,12 +640,7 @@ function defineMainCubeSize(size, cS) {
             face.style.transform = "rotateX(  -90deg) translateZ(" + rows * cubeSize / 2 + "px)";
         }
     });
-
 }
-
-
-
-
 
 // insert mines in the board
 // board(mandatory): 3D square matrix with cube objects
@@ -647,154 +658,10 @@ function insertMines(board, mines) {
             insertedMines++;
         }
     }
-
 }
-
-function getRandom(min, max) {
-    return Math.floor((Math.random() * (max - min))) + min;
-
-}
-
-
-
-
-
-
-
-
-function rotateY(obj, degrees) {
-    let [cosine, sine] = calculateCosSin(degrees);
-    let rotationMatrix = [
-        [cosine, 0, sine, 0],
-        [0, 1, 0, 0],
-        [-sine, 0, cosine, 0],
-        [0, 0, 0, 1]
-    ];
-    let currentMatrix = getCurrentMatrix3D(obj);
-    let rotatedMatrix = multiplyMatrices(currentMatrix, rotationMatrix);
-    rotatedMatrix[3] = currentMatrix[3]; // to avoid changing the position(translation)
-    obj.style.transform = "matrix3d(" + rotatedMatrix.join() + ")";
-    // make sure that the transition is finished before next rotation;
-
-
-    return rotatedMatrix;
-}
-
-
-
-
-
-
-function rotateX(obj, degrees) {
-    let [cosine, sine] = calculateCosSin(degrees);
-    let rotationMatrix = [
-        [1, 0, 0, 0],
-        [0, cosine, -sine, 0],
-        [0, sine, cosine, 0],
-        [0, 0, 0, 1]
-    ];
-    let currentMatrix = getCurrentMatrix3D(obj);
-    let rotatedMatrix = multiplyMatrices(currentMatrix, rotationMatrix);
-    rotatedMatrix[3] = currentMatrix[3]; // to avoid changing the position(translation)
-    obj.style.transform = "matrix3d(" + rotatedMatrix.join() + ")";
-
-    // make sure that the transition is finished before next rotation;
-
-
-    return rotatedMatrix;
-}
-
-
-
-function calculateCosSin(degrees) {
-    let angleRad = (degrees * Math.PI * 2) / 360;
-    let cosine = parseFloat(Math.cos(angleRad));
-    let sine = parseFloat(Math.sin(angleRad));
-    return [cosine, sine];
-
-}
-
-
-
-function rotateZ(obj, degrees) {
-    let [cosine, sine] = calculateCosSin(degrees);
-    let rotationMatrix = [
-        [cosine, -sine, 0, 0],
-        [sine, cosine, 0, 0],
-        [0, 0, 1, 0],
-        [0, 0, 0, 1]
-    ];
-    let currentMatrix = getCurrentMatrix3D(obj);
-    let rotatedMatrix = multiplyMatrices(currentMatrix, rotationMatrix);
-    rotatedMatrix[3] = currentMatrix[3]; // to avoid changing the position(translation)
-    obj.style.transform = "matrix3d(" + rotatedMatrix.join() + ")";
-
-    // make sure that the transition is finished before next rotation;
-
-
-    return rotatedMatrix;
-}
-
-
-
-
-//Returns the homogeneous matrix 4X4 of the entered 3D object
-// obj (mandatory): elementHTML
-function getCurrentMatrix3D(obj) {
-    let matrixString = window.getComputedStyle(obj).transform;
-    let matrixFloat = [
-        [],
-        [],
-        [],
-        []
-    ];
-    matrixString = matrixString.slice(9, -1);
-    let nextComa = matrixString.indexOf(",");
-
-    for (let m = 0; m < 4; m++) {
-        for (let n = 0; n < 4; n++) {
-            if (matrixString.indexOf(",") !== -1) {
-                matrixFloat[m][n] = parseFloat(matrixString.slice(0, nextComa));
-            } else {
-                matrixFloat[m][n] = parseFloat(matrixString.slice(0));
-            }
-            matrixString = matrixString.slice(nextComa + 2); //delete read number
-            nextComa = matrixString.indexOf(",");
-        }
-    }
-    return matrixFloat;
-
-}
-
-
-//Returns the multiplication of two matrices
-// both matrices must be passed as arrays where each element is an array that represent a row of the matrix
-// the returned matrix will be in the same format
-function multiplyMatrices(matrixA, matrixB) {
-    if (matrixA[0].length !== matrixB.length) {
-        console.log("Matrices can not be multiplied due to size incompatibility");
-        return false;
-    }
-
-    let rows = matrixA.length;
-    let columns = matrixB[0].length;
-    let result = new Array(rows).fill(0).map(el => new Array(columns).fill(0));
-    return result.map((row, index) => {
-        return row.map((el, index1) => {
-            let a = 0;
-            matrixA[index].forEach((value, index2) => {
-                a += value * matrixB[index2][index1];
-            });
-            return a;
-        });
-    });
-}
-
-
 
 function assignNeighbourMineCount(board) {
     let neighbours = [];
-
     board.forEach((plane) => {
         plane.forEach((row) => {
             row.forEach((element) => {
@@ -810,15 +677,10 @@ function assignNeighbourMineCount(board) {
                                         element.showId();
                                         el[key].showId();
                                     }
-
                                 }
                             }
-
                         }
-
                     });
-
-
                 } else {
                     console.log("I AM A BOMB!!!")
                     element.showId();
@@ -826,10 +688,7 @@ function assignNeighbourMineCount(board) {
             });
         });
     });
-
 }
-
-
 
 function revealNeighbours(board, currentCube) {
     if (currentCube.neighbourMineCount === 0 &&
@@ -846,29 +705,22 @@ function revealNeighbours(board, currentCube) {
                             openedCubes++;
                             revealNeighbours(board, plane[key]);
                         }
-
                     }
                 }
-
             }
-
         });
-
-
     }
 }
 
 //Returns an array where each element is an object that contains the neighbours of one of the surrounding planes
 //if such plane does not exist, then returns undefined for that position
 function getNeighbours(element, board) {
-
     let currentPlane, planeBack, planeFront;
     let neighbours = [];
     let indexPlane = element.depth;
     let indexRow = element.row;
     let indexCol = element.col;
     let plane = board[indexPlane];
-
     currentPlane = surroundings(plane, indexRow, indexCol);
     if (board[indexPlane - 1] !== undefined) {
         planeBack = surroundings(board[indexPlane - 1], indexRow, indexCol);
@@ -885,11 +737,8 @@ function getNeighbours(element, board) {
     neighbours[0] = currentPlane;
     neighbours[1] = planeBack;
     neighbours[2] = planeFront;
-
     return neighbours;
-
 }
-
 
 // returns the surrounding elements  of a bidimensional matrix
 function surroundings(matrix, y, x) {
@@ -909,7 +758,6 @@ function surroundings(matrix, y, x) {
 function getCell(matrix, y, x) {
     var NO_VALUE = null;
     var value, hasValue;
-
     try {
         hasValue = matrix[y][x] !== undefined;
         value = hasValue ? matrix[y][x] : NO_VALUE;
@@ -917,4 +765,132 @@ function getCell(matrix, y, x) {
         value = NO_VALUE;
     }
     return value;
+}
+
+//todo ********* MATRIX ROTATIONS **********
+
+function eventRotate(rotateFunction, direction, element) {
+    let smooth = setInterval(function () {
+        rotateFunction(mainCube, ROTATE_INTERVAL * direction);
+    }, 25);
+    element.addEventListener("mouseout", () => {
+        clearInterval(smooth);
+    }, {
+        once: true
+    });
+    element.addEventListener("mouseup", () => {
+        clearInterval(smooth);
+    }, {
+        once: true
+    });
+}
+
+function rotateY(obj, degrees) {
+    let [cosine, sine] = calculateCosSin(degrees);
+    let rotationMatrix = [
+        [cosine, 0, sine, 0],
+        [0, 1, 0, 0],
+        [-sine, 0, cosine, 0],
+        [0, 0, 0, 1]
+    ];
+    let currentMatrix = getCurrentMatrix3D(obj);
+    let rotatedMatrix = multiplyMatrices(currentMatrix, rotationMatrix);
+    rotatedMatrix[3] = currentMatrix[3]; // to avoid changing the position(translation)
+    obj.style.transform = "matrix3d(" + rotatedMatrix.join() + ")";
+    // make sure that the transition is finished before next rotation;
+    return rotatedMatrix;
+}
+
+function rotateX(obj, degrees) {
+    let [cosine, sine] = calculateCosSin(degrees);
+    let rotationMatrix = [
+        [1, 0, 0, 0],
+        [0, cosine, -sine, 0],
+        [0, sine, cosine, 0],
+        [0, 0, 0, 1]
+    ];
+    let currentMatrix = getCurrentMatrix3D(obj);
+    let rotatedMatrix = multiplyMatrices(currentMatrix, rotationMatrix);
+    rotatedMatrix[3] = currentMatrix[3]; // to avoid changing the position(translation)
+    obj.style.transform = "matrix3d(" + rotatedMatrix.join() + ")";
+    // make sure that the transition is finished before next rotation;
+    return rotatedMatrix;
+}
+
+function rotateZ(obj, degrees) {
+    let [cosine, sine] = calculateCosSin(degrees);
+    let rotationMatrix = [
+        [cosine, -sine, 0, 0],
+        [sine, cosine, 0, 0],
+        [0, 0, 1, 0],
+        [0, 0, 0, 1]
+    ];
+    let currentMatrix = getCurrentMatrix3D(obj);
+    let rotatedMatrix = multiplyMatrices(currentMatrix, rotationMatrix);
+    rotatedMatrix[3] = currentMatrix[3]; // to avoid changing the position(translation)
+    obj.style.transform = "matrix3d(" + rotatedMatrix.join() + ")";
+    // make sure that the transition is finished before next rotation;
+    return rotatedMatrix;
+}
+
+//Returns the homogeneous matrix 4X4 of the entered 3D object
+// obj (mandatory): elementHTML
+function getCurrentMatrix3D(obj) {
+    let matrixString = window.getComputedStyle(obj).transform;
+    let matrixFloat = [
+        [],
+        [],
+        [],
+        []
+    ];
+    matrixString = matrixString.slice(9, -1);
+    let nextComa = matrixString.indexOf(",");
+    for (let m = 0; m < 4; m++) {
+        for (let n = 0; n < 4; n++) {
+            if (matrixString.indexOf(",") !== -1) {
+                matrixFloat[m][n] = parseFloat(matrixString.slice(0, nextComa));
+            } else {
+                matrixFloat[m][n] = parseFloat(matrixString.slice(0));
+            }
+            matrixString = matrixString.slice(nextComa + 2); //delete read number
+            nextComa = matrixString.indexOf(",");
+        }
+    }
+    return matrixFloat;
+}
+
+//todo ******* MATH OPERATIONS **************
+
+function getRandom(min, max) {
+    return Math.floor((Math.random() * (max - min))) + min;
+
+}
+
+function calculateCosSin(degrees) {
+    let angleRad = (degrees * Math.PI * 2) / 360;
+    let cosine = parseFloat(Math.cos(angleRad));
+    let sine = parseFloat(Math.sin(angleRad));
+    return [cosine, sine];
+}
+
+//Returns the multiplication of two matrices
+// both matrices must be passed as arrays where each element is an array that represent a row of the matrix
+// the returned matrix will be in the same format
+function multiplyMatrices(matrixA, matrixB) {
+    if (matrixA[0].length !== matrixB.length) {
+        console.log("Matrices can not be multiplied due to size incompatibility");
+        return false;
+    }
+    let rows = matrixA.length;
+    let columns = matrixB[0].length;
+    let result = new Array(rows).fill(0).map(el => new Array(columns).fill(0));
+    return result.map((row, index) => {
+        return row.map((el, index1) => {
+            let a = 0;
+            matrixA[index].forEach((value, index2) => {
+                a += value * matrixB[index2][index1];
+            });
+            return a;
+        });
+    });
 }
