@@ -33,7 +33,14 @@ let menuCube = document.querySelector(".main-menu-cube");
 let btnModeNormal =document.getElementById("mode-normal");
 let btnModeHard = document.getElementById("mode-hard");
 let btnModeCustom = document.getElementById("mode-custom");
-
+let selectSize = document.getElementById("board-size");
+let selectMines = document.getElementById("total-mines");
+let blockSelectSizeMines = document.querySelector(".game-settings .cover-siblings");
+let btnStartGame = document.getElementById("btn-start-game");
+let gameScreen = document.getElementById("game-screen");
+let mainMenuScreen = document.getElementById("main-menu-screen");
+let btnPlayAgain = document.getElementById("btn-play-again");
+let btnNewGame = document.getElementById("btn-new-game");
 
 
 //game variables
@@ -75,7 +82,63 @@ selectGuest.addEventListener("click", () => {
 
 
 // Choosing game mode
-btnModeNormal.addEventListener("click",)
+btnModeNormal.addEventListener("click",()=>{
+    addClassToElement(btnModeNormal, "selected-mode");
+    removeClassElement(btnModeHard, "selected-mode");
+    removeClassElement(btnModeCustom, "selected-mode");
+    selectSize.value = 5;
+    selectMines.value = 10;
+    removeClassElement(blockSelectSizeMines,"hide");
+
+});
+btnModeHard.addEventListener("click",()=>{
+    addClassToElement(btnModeHard, "selected-mode");
+    removeClassElement(btnModeNormal, "selected-mode");
+    removeClassElement(btnModeCustom, "selected-mode");
+    selectSize.value = 8;
+    selectMines.value = 25;
+    removeClassElement(blockSelectSizeMines,"hide");
+});
+btnModeCustom.addEventListener("click",()=>{
+    addClassToElement(btnModeCustom, "selected-mode");
+    removeClassElement(btnModeHard, "selected-mode");
+    removeClassElement(btnModeNormal, "selected-mode");
+    addClassToElement(blockSelectSizeMines,"hide");
+
+});
+
+
+//Start game
+btnStartGame.addEventListener("click",startGame);
+
+
+function startGame(){
+    // if mode custom check size and mines
+    if((selectSize.value==="") || (parseInt(selectSize.value)<2) || (parseInt(selectSize.value) > 15)){
+        //error
+        console.log("size is wrong");
+        return false;
+    }else{
+        if( (parseInt(selectMines.value) >= Math.pow(parseInt(selectSize.value),3))|| (selectMines.value==="") || (parseInt(selectMines.value) <1)){
+            //error
+            console.log("number of mines wrong");
+            return false;
+        }
+    }
+
+    console.log("game starts!!");
+
+    createBoard(selectSize.value,selectMines.value);
+    addClassToElement(mainMenuScreen,"hide");
+    removeClassElement(gameScreen,"hide");
+    //pass to next screen
+}
+
+
+
+
+
+
 
 
 
@@ -93,6 +156,8 @@ function removeClassElement(form, klass) {
 
 
 
+
+//Rotate cube
 arrowRight.addEventListener("mousedown", () => {
     eventRotate(rotateY, -1, arrowRight);
 });
@@ -133,17 +198,29 @@ function User(guest, username, pass = undefined, email = undefined) {
             return false;
         }
     }
+    this.addMatch = function(match){
+        this.matches.push(match);
+    }
+
 }
 
 function Match() {
     this.score;
     this.time;
+    this.size;
+    this.mines;
+    this.setScore = function(){
+
+    }
 }
 
 
+
+// User menu
 btnRegister.addEventListener("click", () => {
     let currentForm = document.querySelector("#registration-form > form");
     currentUser = checkFormInputs(currentForm);
+
 });
 btnLogIn.addEventListener("click", () => {
     let currentForm = document.querySelector("#log-in-form > form");
@@ -153,6 +230,12 @@ btnLogIn.addEventListener("click", () => {
 btnGuest.addEventListener("click", ()=>{
     currentUser = newGuest();
 });
+
+
+
+
+
+
 //check if the inputs of the form are correct and if so stores the information in a new user object
 function checkFormInputs(form) {
     let verifiedFields = 0;
@@ -309,18 +392,39 @@ function eventRotate(rotateFunction, direction, element) {
 
 
 function openCube(event, board) {
-    let [plane, row, col] = event.currentTarget.id.slice(-3).split("");
-    let currentCube = board[plane][row][col];
+    let cubeIndex = event.currentTarget.id;
+    cubeIndex = cubeIndex.replace("-",""); // remove the slash from small-cube
 
+    let currentDash = cubeIndex.indexOf("-");
+    cubeIndex = cubeIndex.replace("-","");
+    let nextDash = cubeIndex.indexOf("-");
+    let plane = cubeIndex.slice(currentDash,nextDash);
+
+    currentDash = nextDash;
+    cubeIndex = cubeIndex.replace("-","");
+    nextDash = cubeIndex.indexOf("-");
+    let row = cubeIndex.slice(currentDash,nextDash);
+
+    currentDash = nextDash;
+    cubeIndex = cubeIndex.replace("-","");
+    let col = cubeIndex.slice(currentDash);
+
+    //let [plane, row, col] = event.currentTarget.id.slice(-3).split(""); // only works with board of size 10 or smaller
+    let currentCube = board[plane][row][col];
+    let finishedGame = false;
     if (currentCube.mined === true) {
         currentCube.showMine();
+        console.log("YOU LOST!!!");
+        // show you lost
         // display menu
-        endGame(board);
+        
         //end game
-        //play again 
-        //menu
+        //play again -> choose board
+        //main menu
+        finishedGame = true;
     } else {
         openedCubes++;
+        console.log(currentCube);
         currentCube.showNeighbourNumber();
         currentCube.opened = true;
         revealNeighbours(board, currentCube);
@@ -329,12 +433,13 @@ function openCube(event, board) {
             //display menu 
             //play again
             // menu
-        }
-        if (currentCube.neighbourMineCount === 0) {
-            console.log("I AM SAFE");
+            finishedGame = true;
         }
     }
+    if(finishedGame){
 
+        endGame(board);
+    }
 
 
 }
@@ -403,7 +508,7 @@ function createBoard(size, mines) {
 //creates one cube object and positionates it
 function Cube(row, col, depth, cubeSize, totalDepth) {
     let smallCube = document.createElement("div");
-    let idCube = "small-cube" + depth + "" + row + "" + col;
+    let idCube = "small-cube"+ "-" + depth + "-" + row + "-" + col;
     smallCube.classList.add("mini-cube"); // class mini-cube is defined in the css and contains the real size of the cube
     smallCube.id = idCube;
     smallCube.style.transform += "translateX(" + col * cubeSize + "px)";

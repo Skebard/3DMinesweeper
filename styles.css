@@ -53,6 +53,7 @@ form .my-cross{
  -khtml-user-select: none; /* KHTML browsers (e.g. Konqueror) */
 -webkit-user-select: none; /* Chrome, Safari, and Opera */
 -webkit-touch-callout: none; /* Disable Android and iOS callouts*/
+
     margin-left:2rem;
     flex-shrink: 0;
     font-family:verdana;
@@ -231,9 +232,9 @@ form > button{
 }
 
 .game-options-container input{
-    width: 3rem;
+    width: 5rem;
+    text-align:center;
     font-size:1.2rem;
-    
 }
 
 .game-options-container button{
@@ -243,6 +244,16 @@ form > button{
 
 .game-difficulty li.selected-mode{
     background-color:orangered;
+}
+.game-settings{
+    position:relative;
+}
+.cover-siblings{
+    position:absolute;
+    width:100%;
+    height:100%;
+    background-color:transparent;
+    z-index:10;
 }
 
 
@@ -326,7 +337,7 @@ footer{
     font-weight: bold;
     color: white;
     text-align: center;
-    display:bock;
+    display:block;
    
 }
 
@@ -390,6 +401,7 @@ footer{
     transform-style:preserve-3d; /* */
     transform: translateZ(-100px);
     transition:  0s;
+  
    
 }
 
@@ -408,15 +420,12 @@ footer{
     color: white;
     text-align: center;
     pointer-events: none;
-    display:bock;
-
+    display:none;
 }
 
 .main-cube-face--front  {
     transform: rotateY(  0deg) translateZ(100px);
     background: hsla(  0, 100%, 50%, 0.7);
-
-    display:block;
 }
 .main-cube-face--right  {
     transform: rotateY( 90deg) translateZ(100px);
@@ -532,4 +541,28 @@ footer{
 .rotate-bottom{
     bottom: -80px;
     border-top: 40px solid blue;
+}
+
+/***** End game menu *****/
+.menu-end-game{
+    position:absolute;
+    width:20rem;
+    height:20rem;
+    background-color:red;
+    margin: auto;
+    right:0;
+    left:0;
+    top:0;
+    bottom:0;
+    z-index:1000;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+}
+
+.menu-end-game button{
+    margin-top:1rem;
+    width:50%;
+    padding: 1rem 0 ;
 }
