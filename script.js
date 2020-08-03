@@ -41,12 +41,15 @@ let gameScreen = document.getElementById("game-screen");
 let mainMenuScreen = document.getElementById("main-menu-screen");
 let btnPlayAgain = document.getElementById("btn-play-again");
 let btnNewGame = document.getElementById("btn-new-game");
+let menuEnd = document.getElementById("menu-end");
+let darkBackground = document.getElementById("dark-background-id");
 
 
 //game variables
 let totalMines;
 let openedCubes;
 let totalCubes;
+let currentBoard;
 
 
 //Users
@@ -110,6 +113,11 @@ btnModeCustom.addEventListener("click",()=>{
 
 //Start game
 btnStartGame.addEventListener("click",startGame);
+
+//Finishing game
+btnPlayAgain.addEventListener("click",playAgain);
+btnNewGame.addEventListener("click",newGame);
+
 
 
 function startGame(){
@@ -204,14 +212,13 @@ function User(guest, username, pass = undefined, email = undefined) {
 
 }
 
-function Match() {
-    this.score;
-    this.time;
-    this.size;
-    this.mines;
-    this.setScore = function(){
 
-    }
+function Match(size,mines,time) {
+    this.score = ((size/3)*mines*10000)/time;
+    this.time = time;
+    this.size = size;
+    this.mines = mines;
+
 }
 
 
@@ -430,15 +437,20 @@ function openCube(event, board) {
         revealNeighbours(board, currentCube);
         if (openedCubes === totalCubes - totalMines) {
             console.log("YOU WIN!!");
-            //display menu 
-            //play again
-            // menu
+            let lastMatch = new Match(board.length,totalMines,75);
+            currentUser.addMatch(lastMatch);
             finishedGame = true;
         }
     }
     if(finishedGame){
 
-        endGame(board);
+        //endGame(board);
+        removeClassElement(menuEnd,"hide");
+        removeClassElement(darkBackground,"hide");
+        endGame(currentBoard);
+        openedCubes = 0;
+        //store matc
+
     }
 
 
@@ -446,7 +458,18 @@ function openCube(event, board) {
 
 // play with the same size
 function playAgain() {
+    //delete old board and create a new one
+    createBoard(currentBoard.length,totalMines);
+    addClassToElement(menuEnd,"hide");
+    addClassToElement(darkBackground,"hide");
 
+}
+function newGame(){
+    addClassToElement(menuEnd,"hide");
+    addClassToElement(darkBackground,"hide");
+
+    removeClassElement(mainMenuScreen,"hide");
+    addClassToElement(gameScreen,"hide");
 }
 
 //remove event listeners and delete small cubes
@@ -498,7 +521,7 @@ function createBoard(size, mines) {
     });
 
 
-
+    currentBoard = board;
     console.log(board);
     return board;
 
