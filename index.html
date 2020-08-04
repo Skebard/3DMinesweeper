@@ -5,133 +5,296 @@
     <meta charset="UTF-8">
     <title>MindSweeper</title>
     <link rel="stylesheet" href="styles.css">
-    
+    <script src="https://kit.fontawesome.com/9547750bbd.js" crossorigin="anonymous"></script>
+
+
 </head>
 
 <body>
     <header>
-
+        <div class="logo">
+            3D Minesweeper
+        </div>
+        <div>
+            <ul class="language-menu">
+                <li class="flag russian-flag">
+                    <img src="Images/uk-flag.png">
+                </li>
+                <li class="flag english-flag">
+                    <img src="Images/spanish-flag.png">
+                </li>
+                <li class="flag spanish-flag">
+                    <img src="Images/russian-flag.png">
+                </li>
+            </ul>
+        </div>
+        <div class="user-info">
+            <span id="user-profile" class="log-in-user">Log In</span>
+            <span id="username-header"class="log-in-user hide"></span>
+            <i class="fas fa-user-circle user-icon" id="log-in-icon"></i>
+            <i class="fas fa-sign-out-alt user-icon  my-log-out-icon hide" id="log-out-icon"></i>
+        </div>
     </header>
-    <main>
+    <div class="dark-background hide" id="dark-background-id">
+    </div>
 
-        <div class="main-board">
-            <div class="scene">
-                <div class="main-cube">
-                    <div class="main-cube-face main-cube-face--front">
-                        front
+    <main>
+        <section class="intro hide">
+
+        </section>
+        <section class="main-menu" id="main-menu-screen">
+            <div class="scene-main-menu ">
+                <div class="main-menu-cube">
+                    <div class="menu-cube-face menu-cube-face--front">
+                        <div class="user-menu-container">
+                            <div class="user-menu">
+                                <ul class="user-options">
+                                    <li class="selected" id="select-register">Register</li>
+                                    <li id="select-log-in">Log in</li>
+                                    <li id="select-guest">Play as a guest</li>
+                                </ul>
+                                <div class="user-menu-content" id="registration-form">
+                                    <form>
+                                        <label for="usernameR">Choose your username</label>
+                                        <input type="text" id="usernameR" name="usernameR">
+                                        <label for="passwordR">Password</label>
+                                        <input type="password" id="passwordR" name="passwordR">
+                                        <label for="password-againR">Confirm password</label>
+                                        <input type="password" id="password-againR" name="password-againR">
+                                        <label for="emailR">Email</label>
+                                        <input type="text" id="emailR" name="emailR">
+                                        <button type="button" id="btn-register">ENTER</button>
+                                    </form>
+                                </div>
+                                <div class="user-menu-content hide" id="log-in-form">
+                                    <form>
+                                        <label for="username">Choose your username</label>
+                                        <input type="text" id="username" name="username">
+                                        <label for="password">Password</label>
+                                        <input type="password" id="password" name="password">
+                                        <button type="button" id="btn-logIn">ENTER</button>
+                                    </form>
+
+                                </div>
+                                <div class="play-guest user-menu-content hide" id="guest-form">
+                                    <form>
+                                        <button type="button" id="btn-guest">ENTER</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="main-cube-face main-cube-face--back">
+                    <div class="menu-cube-face menu-cube-face--back">
                         back
                     </div>
-                    <div class="main-cube-face main-cube-face--right">
+                    <div class="menu-cube-face menu-cube-face--right">
                         right
                     </div>
-                    <div class="main-cube-face main-cube-face--left">
-                        let
+                    <div class="menu-cube-face menu-cube-face--left">
+                        <div class="game-options-container">
+                            <ul class="game-difficulty">
+                                <li class="selected-mode" id="mode-normal">Normal</li>
+                                <li id="mode-hard">Hard</li>
+                                <li id="mode-custom">Custom</li>
+                            </ul>
+                            <ul class="game-settings">
+                                <li class="cover-siblings"></li>
+                                <li>
+                                    <label for="board-size">Size</label>
+                                    <input type="number" id="board-size" name="board-size" value="5" min="2" max="15">
+                                </li>
+                                <li>
+                                    <label for="total-mines">Mines</label>
+                                    <input type="number" id="total-mines" name="total-mines" value="10" min="1">
+                                </li>
+                            </ul>
+                            <button type="button" id="btn-start-game">
+                                PLAY
+                            </button>
+
+
+                        </div>
                     </div>
-                    <div class="main-cube-face main-cube-face--top">
+                    <div class="menu-cube-face menu-cube-face--top">
                         top
                     </div>
-                    <div class="main-cube-face main-cube-face--bottom">
+                    <div class="menu-cube-face menu-cube-face--bottom">
                         bottom
                     </div>
-                    <div class="small-cube1 mini-cube">
-                        <div class="small-cube-face small-cube-face--front">
-                            front
-                        </div>
-                        <div class="small-cube-face small-cube-face--back">
-                            back
-                        </div>
-                        <div class="small-cube-face small-cube-face--right">
-                            right
-                        </div>
-                        <div class="small-cube-face small-cube-face--left">
-                            let
-                        </div>
-                        <div class="small-cube-face small-cube-face--top">
-                            top
-                        </div>
-                        <div class="small-cube-face small-cube-face--bottom">
-                            bottom
-                        </div>
-                    </div>
-                    <div class="small-cube2 mini-cube">
-                        <div class="small-cube-face small-cube-face--front">
-                            front
-                        </div>
-                        <div class="small-cube-face small-cube-face--back">
-                            back
-                        </div>
-                        <div class="small-cube-face small-cube-face--right">
-                            right
-                        </div>
-                        <div class="small-cube-face small-cube-face--left">
-                            let
-                        </div>
-                        <div class="small-cube-face small-cube-face--top">
-                            top
-                        </div>
-                        <div class="small-cube-face small-cube-face--bottom">
-                            bottom
-                        </div>
-                    </div>
-                    <div class="small-cube3 mini-cube">
-                        <div class="small-cube-face small-cube-face--front">
-                            front
-                        </div>
-                        <div class="small-cube-face small-cube-face--back">
-                            back
-                        </div>
-                        <div class="small-cube-face small-cube-face--right">
-                            right
-                        </div>
-                        <div class="small-cube-face small-cube-face--left">
-                            let
-                        </div>
-                        <div class="small-cube-face small-cube-face--top">
-                            top
-                        </div>
-                        <div class="small-cube-face small-cube-face--bottom">
-                            bottom
-                        </div>
-                    </div>
-                    <div class="small-cube4 mini-cube">
-                        <div class="small-cube-face small-cube-face--front">
-                            front
-                        </div>
-                        <div class="small-cube-face small-cube-face--back">
-                            back
-                        </div>
-                        <div class="small-cube-face small-cube-face--right">
-                            right
-                        </div>
-                        <div class="small-cube-face small-cube-face--left">
-                            let
-                        </div>
-                        <div class="small-cube-face small-cube-face--top">
-                            top
-                        </div>
-                        <div class="small-cube-face small-cube-face--bottom">
-                            bottom
-                        </div>
-                    </div>
                 </div>
-
             </div>
-        </div>
-        <button class="to-right">
-            Right
-        </button>
-        <button class="to-left">
-            Left
-        </button>
-        <button class="to-top">
-            Top
-        </button>
-        <button class="to-bottom">
-            Bottom
-        </button>
-        
+
+
+            
+
+
+
+        </section>
+        <section class="my-ranking">
+         
+                <div class="container-label" id="btn-ranking">
+                    <div class="label-ranking" >RANKING</div>
+                </div>
+                <div class="ranking">
+                    <dl>
+                        <dt class="gold-trophy">
+                            <i class="fas fa-trophy gold-trophy"></i>
+                            <span>Antonio</span>
+                        </dt>
+                        <dd>32423</dd>
+                        <dt class="silver-trophy">
+                            <i class="fas fa-trophy silver-trophy"></i>
+                            <span>Juan</span>
+                        </dt>
+                        <dd>234</dd>
+                        <dt class="bronze-trophy">
+                            <i class="fas fa-trophy bronze-trophy"></i>
+                            <span>Pedro</span>
+                        </dt>
+                        <dd>54</dd>
+                        <dt class="not-top-ranking">
+                            <i>4</i>
+                            <span>Pedro</span>
+                        </dt>
+                        <dd>54</dd>
+                        <dt class="not-top-ranking">
+                            <i>5</i>
+                            <span>Pep</span>
+                        </dt>
+                        <dd>54</dd>
+                        <dt class="not-top-ranking">
+                            <i>4</i>
+                            <span>Pedro</span>
+                        </dt>
+                        <dd>54</dd>
+                        <dt class="not-top-ranking">
+                            <i>5</i>
+                            <span>Pep</span>
+                        </dt>
+                        <dd>54</dd>
+                        <dt class="not-top-ranking">
+                            <i>4</i>
+                            <span>Pedro</span>
+                        </dt>
+                        <dd>54</dd>
+                        <dt class="not-top-ranking">
+                            <i>5</i>
+                            <span>Pep</span>
+                        </dt>
+                        <dd>54</dd>
+                        <dt class="not-top-ranking">
+                            <i>4</i>
+                            <span>Pedro</span>
+                        </dt>
+                        <dd>54</dd>
+                        <dt class="not-top-ranking">
+                            <i>5</i>
+                            <span>Pep</span>
+                        </dt>
+                        <dd>54</dd>
+                        <dt class="not-top-ranking">
+                            <i>4</i>
+                            <span>Pedro</span>
+                        </dt>
+                        <dd>54</dd>
+                        <dt class="not-top-ranking">
+                            <i>5</i>
+                            <span>Pep</span>
+                        </dt>
+                        <dd>54</dd>
+                        <dt class="not-top-ranking">
+                            <i>4</i>
+                            <span>Pedro</span>
+                        </dt>
+                        <dd>54</dd>
+                        <dt class="not-top-ranking">
+                            <i>5</i>
+                            <span>Pep</span>
+                        </dt>
+                        <dd>54</dd>
+                        <dt class="not-top-ranking">
+                            <i>4</i>
+                            <span>Pedro</span>
+                        </dt>
+                        <dd>54</dd>
+                        <dt class="not-top-ranking">
+                            <i>5</i>
+                            <span>Pep</span>
+                        </dt>
+                        <dd>54</dd>
+                    </dl>
+            </div>
+
+
+        </section>
+
+
+        <section class="hide" id="game-screen">
+            <div class="main-board">
+                <div class="scene">
+                    <div class="main-cube">
+                        <div class="main-cube-face main-cube-face--front">
+                            front
+                        </div>
+                        <div class="main-cube-face main-cube-face--back">
+                            back
+                        </div>
+                        <div class="main-cube-face main-cube-face--right">
+                            right
+                        </div>
+                        <div class="main-cube-face main-cube-face--left">
+                            let
+                        </div>
+                        <div class="main-cube-face main-cube-face--top">
+                            top
+                        </div>
+                        <div class="main-cube-face main-cube-face--bottom">
+                            bottom
+                        </div>
+                        <div class="small-cube1 mini-cube hide">
+                            <div class="small-cube-face small-cube-face--front">
+                                front
+                            </div>
+                            <div class="small-cube-face small-cube-face--back">
+                                back
+                            </div>
+                            <div class="small-cube-face small-cube-face--right">
+                                right
+                            </div>
+                            <div class="small-cube-face small-cube-face--left">
+                                let
+                            </div>
+                            <div class="small-cube-face small-cube-face--top">
+                                top
+                            </div>
+                            <div class="small-cube-face small-cube-face--bottom">
+                                bottom
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class=" rotate-arrow rotate-right" id="rotateRight"></div>
+                <div class=" rotate-arrow rotate-top" id="rotateTop"></div>
+                <div class=" rotate-arrow rotate-left" id="rotateLeft"></div>
+                <div class=" rotate-arrow rotate-bottom" id="rotateBottom"></div>
+            </div>
+        </section>
+        <section class="menu-end-game hide" id="menu-end">
+            <div id="end-winning">
+                <h1> YOU WON</h1>
+                <p>Score: <span id="score-end"></span></p>
+            </div>
+            <div id="end-losing" class="hide">
+                <h1>YOU LOST</h1>
+            </div>
+            <button type="button" id="btn-play-again">PLAY AGAIN</button>
+            <button type="button" id="btn-new-game">NEW GAME</button>
+        </section>
+
+
+
     </main>
     <footer></footer>
     <script src="script.js"></script>
