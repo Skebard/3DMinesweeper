@@ -48,6 +48,8 @@ let usernameHeader = document.getElementById("username-header");
 let logInIcon = document.getElementById("log-in-icon");
 let logOutIcon = document.getElementById("log-out-icon");
 let rankingDisplay = document.querySelector("section.my-ranking");
+let youWonMsg = document.getElementById("end-winning");
+let youLostMsg = document.getElementById("end-losing");
 
 //game variables
 let totalMines;
@@ -178,6 +180,32 @@ arrowLeft.addEventListener("mousedown", () => {
 arrowBottom.addEventListener("mousedown", () => {
     eventRotate(rotateX, 1, arrowBottom);
 });
+
+
+function introMainCube(durationSec,spins){
+    let fullSpins;
+    let faceSize;
+    let interval = 
+
+        setInterval(function myTransition(){
+
+            rotateX(menuCube,3);
+        },25);
+    for(let i = 0; i<fullSpins; i++){
+        
+    }
+
+
+
+}
+
+
+
+
+
+
+
+
 
 function rankingOver(){
     rankingDisplay.style.right = -rankingDisplay.offsetWidth +"px";
@@ -432,7 +460,39 @@ function updateRanking(){
     matches.sort((gameA,gameB)=>{
         return gameB.score - gameA.score;
     });
-    return matches;
+  
+    
+    let playerNames = document.querySelectorAll(".ranking dt");
+    let playerScores = document.querySelectorAll(".ranking dd");
+    //delete old records
+    playerNames.forEach((name,index)=>{
+        if(index>2){
+            name.remove();
+            playerScores[index].remove();
+        }else{
+            name.querySelector("span").textContent = "";
+            playerScores[index].textContent = "";
+        }
+    });
+    let rankingList = document.querySelector(".ranking");
+    playerNames = document.querySelectorAll(".ranking dt");
+    playerScores = document.querySelectorAll(".ranking dd");
+    matches.forEach((match,index)=>{
+        if(index < playerNames.length){
+            playerNames[index].querySelector("span").textContent = match.name;
+            playerScores[index].textContent = match.score.toFixed(0);
+        }else{
+            let newPlayer = document.createElement("dt");
+            newPlayer.innerHTML = `<i>${index+1}</i><span>${match.name}</span>`;
+            newPlayer.classList.add("not-top-ranking");
+            let newScore = document.createElement("dd");
+            newScore.innerHTML = match.score.toFixed(0);
+            rankingList.appendChild(newPlayer);
+            rankingList.appendChild(newScore);
+        }
+    });
+    rankingDisplay.style.right = -rankingDisplay.offsetWidth +"px";
+
 }
 
 
@@ -471,6 +531,8 @@ function openCube(event, board) {
     if (currentCube.mined === true) {
         currentCube.showMine();
         console.log("YOU LOST!!!");
+        youWonMsg.classList.add("hide");
+        youLostMsg.classList.remove("hide");
 
         finishedGame = true;
     } else {
@@ -485,6 +547,11 @@ function openCube(event, board) {
             let lastMatch = new Match(board.length, totalMines, currentUser.time);
             currentUser.addMatch(lastMatch);
             finishedGame = true;
+            updateRanking();
+            youWonMsg.classList.remove("hide");
+            youLostMsg.classList.add("hide");
+            document.getElementById("score-end").textContent = lastMatch.score.toFixed(0);
+            document.getElementById("time-end").textContent = lastMatch.time.toFixed(0);
         }
     }
     if (finishedGame) {
@@ -912,6 +979,19 @@ function getCurrentMatrix3D(obj) {
         }
     }
     return matrixFloat;
+}
+
+function translateXYZ(obj,pixX = 0, pixY = 0, pixZ = 0){
+    let translationMatrix = [
+        [1, 0, 0, 0],
+        [0, 1, 0, 0],
+        [0, 0, 1, 0],
+        [pixX, pixY, pixZ, 1]
+    ];  
+    let currentMatrix = getCurrentMatrix3D(obj);
+    let translatedMatrix = multiplyMatrices(currentMatrix, translationMatrix);
+    obj.style.transform = "matrix3d(" + translatedMatrix.join() + ")";
+    return translatedMatrix;
 }
 
 //todo ******* MATH OPERATIONS **************

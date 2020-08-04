@@ -144,7 +144,7 @@ form .my-cross {
     right: 0;
     bottom: 0;
     padding: 1rem;
-    z-index: 20;
+    z-index: 5;
     animation: shiftLeft 1s 1;
 }
 
@@ -411,8 +411,9 @@ form>button {
 
 .ranking {
     padding-right:2rem;
-    overflow-y:scroll;
+    overflow-y:auto;
     max-height:50vh;
+    min-height:174px;
     border: 1px solid white;
     transition: all 5s;
     z-index: 100;
@@ -750,11 +751,14 @@ footer {
     left: 0;
     top: 0;
     bottom: 0;
-    z-index: 1000;
+    z-index: 15;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+.menu-end-game *{
+    text-align:center;
 }
 
 .menu-end-game.hide {
