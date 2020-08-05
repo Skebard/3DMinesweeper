@@ -10,6 +10,8 @@ const PASSWORD_REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const CHECK_ICON = '<i class="far fa-check-circle my-check label-icon"></i>';
 const CROSS_ICON = '<i class="far fa-times-circle my-cross label-icon"></i>';
+const CSS_COLOR_NAMES= ["chartreuse","chocolate","darkgoldenrod","darkturquoise","red"];
+//rebeccapurple nice color
 
 //HTML elements
 let mainBoard = document.querySelector(".main-board");
@@ -62,14 +64,15 @@ let currentBoard;
 let users = [];
 let currentUser;
 
+introMainCube();
 
 
-setTimeout(()=>{
-    rankingDisplay.style.right = -rankingDisplay.offsetWidth +"px";
-},200);
-rankingDisplay.addEventListener("mouseover",rankingOver);
-rankingDisplay.addEventListener("mouseout",rankingOut);
-rankingDisplay.addEventListener("click",showRanking);
+setTimeout(() => {
+    rankingDisplay.style.right = -rankingDisplay.offsetWidth + "px";
+}, 200);
+rankingDisplay.addEventListener("mouseover", rankingOver);
+rankingDisplay.addEventListener("mouseout", rankingOut);
+rankingDisplay.addEventListener("click", showRanking);
 
 //todo set elements position
 
@@ -77,7 +80,7 @@ rankingDisplay.addEventListener("click",showRanking);
 
 //todo DEFAULT USERS
 
-users.push(new User(false,"Antonio","1234asdfA",false));
+users.push(new User(false, "Antonio", "1234asdfA", false));
 
 
 //todo EVENT LISTENERS
@@ -91,7 +94,7 @@ btnPlayAgain.addEventListener("click", playAgain);
 btnNewGame.addEventListener("click", newGame);
 
 //log out 
-logOutIcon.addEventListener("click",logOut);
+logOutIcon.addEventListener("click", logOut);
 
 
 // Forms management
@@ -104,20 +107,20 @@ selectRegister.addEventListener("click", () => {
     addClassToElement(guestForm, "hide");
 });
 selectLogIn.addEventListener("click", displayLogIn);
-logInHeader.addEventListener("click", ()=>{
+logInHeader.addEventListener("click", () => {
     displayLogIn();
 
-    if(gameScreen.classList.contains("hide")){
-            menuCube.style.transform = "translateZ(-225px) rotateY(0)";
-            users.pop();
-    }else if(menuEnd.classList.contains("hide")===false){
-        if(currentUser.matches.lengh===0){
+    if (gameScreen.classList.contains("hide")) {
+        menuCube.style.transform = "translateZ(-225px) rotateY(0)";
+        users.pop();
+    } else if (menuEnd.classList.contains("hide") === false) {
+        if (currentUser.matches.lengh === 0) {
             users.pop()
         }
-        
+
         showMainMenu();
     }
-    
+
 
 });
 selectGuest.addEventListener("click", () => {
@@ -182,19 +185,24 @@ arrowBottom.addEventListener("mousedown", () => {
 });
 
 
-function introMainCube(durationSec,spins){
-    let fullSpins;
-    let faceSize;
-    let interval = 
+function introMainCube(durationSec, spins) {
+    let fullSpins=1;
+    let faceSize = 450;
+    let interval;
+    translateXYZ(menuCube,0,0,-faceSize*4*fullSpins);
+    let positionZ = 0;
+    
+    let myTransition = setInterval(function () {
+        translateXYZ(menuCube, 0, 0, faceSize / 30);
+        rotateX(menuCube, 3);
+        positionZ+=faceSize/30;
+     
+        if(positionZ===faceSize*4*fullSpins){
+            clearInterval(myTransition);
+            menuCube.style.transition = "all 1.5s"
+        }
 
-        setInterval(function myTransition(){
-
-            rotateX(menuCube,3);
-        },25);
-    for(let i = 0; i<fullSpins; i++){
-        
-    }
-
+    }, 7); // 30 cicles per face 300ms/face 1200ms/spin
 
 
 }
@@ -207,31 +215,33 @@ function introMainCube(durationSec,spins){
 
 
 
-function rankingOver(){
-    rankingDisplay.style.right = -rankingDisplay.offsetWidth +"px";
+function rankingOver() {
+    rankingDisplay.style.right = -rankingDisplay.offsetWidth + "px";
 }
-function rankingOut(){
-    rankingDisplay.style.right = -rankingDisplay.offsetWidth +"px";
+
+function rankingOut() {
+    rankingDisplay.style.right = -rankingDisplay.offsetWidth + "px";
 }
-function showRanking(){
+
+function showRanking() {
     darkBackground.classList.remove("hide");
     rankingDisplay.style.right = "0px";
-    rankingDisplay.removeEventListener("mouseover",rankingOver);
-    rankingDisplay.removeEventListener("mouseout",rankingOut);
-    rankingDisplay.removeEventListener("click",showRanking);
-    rankingDisplay.addEventListener("click",function hideRanking(){
-        rankingDisplay.style.right = -rankingDisplay.offsetWidth +"px";
-        rankingDisplay.removeEventListener("click",hideRanking);
-        rankingDisplay.addEventListener("click",showRanking);
-        rankingDisplay.addEventListener("mouseover",rankingOver);
-        rankingDisplay.addEventListener("mouseout",rankingOut);
+    rankingDisplay.removeEventListener("mouseover", rankingOver);
+    rankingDisplay.removeEventListener("mouseout", rankingOut);
+    rankingDisplay.removeEventListener("click", showRanking);
+    rankingDisplay.addEventListener("click", function hideRanking() {
+        rankingDisplay.style.right = -rankingDisplay.offsetWidth + "px";
+        rankingDisplay.removeEventListener("click", hideRanking);
+        rankingDisplay.addEventListener("click", showRanking);
+        rankingDisplay.addEventListener("mouseover", rankingOver);
+        rankingDisplay.addEventListener("mouseout", rankingOut);
         darkBackground.classList.add("hide");
 
     });
 }
 
 
-function showMainMenu(){
+function showMainMenu() {
     menuCube.style.transform = "translateZ(-225px) rotateY(0)";
     mainMenuScreen.classList.remove("hide");
     gameScreen.classList.add("hide");
@@ -239,7 +249,7 @@ function showMainMenu(){
     darkBackground.classList.add("hide");
 }
 
-function logOut(){
+function logOut() {
     logOutIcon.classList.add("hide");
     logInIcon.classList.remove("hide");
     usernameHeader.classList.add("hide");
@@ -297,12 +307,12 @@ function removeClassElement(form, klass) {
 
 
 
-function showCurrentUser(user){
-        logInHeader.classList.add("hide");
-        usernameHeader.innerHTML = user.username;
-        usernameHeader.classList.remove("hide");
-        logInIcon.classList.add("hide");
-        logOutIcon.classList.remove("hide");
+function showCurrentUser(user) {
+    logInHeader.classList.add("hide");
+    usernameHeader.innerHTML = user.username;
+    usernameHeader.classList.remove("hide");
+    logInIcon.classList.add("hide");
+    logOutIcon.classList.remove("hide");
 }
 
 
@@ -445,11 +455,11 @@ function newGuest() {
 
 
 
-function updateRanking(){
+function updateRanking() {
     //get array with name an scores
     let matches = [];
-    users.forEach(user=>{
-        user.matches.forEach(match=>{
+    users.forEach(user => {
+        user.matches.forEach(match => {
             matches.push({
                 name: user.username,
                 score: match.score
@@ -457,19 +467,19 @@ function updateRanking(){
         });
     });
     // ordenate games from higher score to lower
-    matches.sort((gameA,gameB)=>{
+    matches.sort((gameA, gameB) => {
         return gameB.score - gameA.score;
     });
-  
-    
+
+
     let playerNames = document.querySelectorAll(".ranking dt");
     let playerScores = document.querySelectorAll(".ranking dd");
     //delete old records
-    playerNames.forEach((name,index)=>{
-        if(index>2){
+    playerNames.forEach((name, index) => {
+        if (index > 2) {
             name.remove();
             playerScores[index].remove();
-        }else{
+        } else {
             name.querySelector("span").textContent = "";
             playerScores[index].textContent = "";
         }
@@ -477,11 +487,11 @@ function updateRanking(){
     let rankingList = document.querySelector(".ranking");
     playerNames = document.querySelectorAll(".ranking dt");
     playerScores = document.querySelectorAll(".ranking dd");
-    matches.forEach((match,index)=>{
-        if(index < playerNames.length){
+    matches.forEach((match, index) => {
+        if (index < playerNames.length) {
             playerNames[index].querySelector("span").textContent = match.name;
             playerScores[index].textContent = match.score.toFixed(0);
-        }else{
+        } else {
             let newPlayer = document.createElement("dt");
             newPlayer.innerHTML = `<i>${index+1}</i><span>${match.name}</span>`;
             newPlayer.classList.add("not-top-ranking");
@@ -491,7 +501,7 @@ function updateRanking(){
             rankingList.appendChild(newScore);
         }
     });
-    rankingDisplay.style.right = -rankingDisplay.offsetWidth +"px";
+    rankingDisplay.style.right = -rankingDisplay.offsetWidth + "px";
 
 }
 
@@ -533,7 +543,7 @@ function openCube(event, board) {
         console.log("YOU LOST!!!");
         youWonMsg.classList.add("hide");
         youLostMsg.classList.remove("hide");
-
+        showMines(currentBoard);
         finishedGame = true;
     } else {
         openedCubes++;
@@ -543,7 +553,7 @@ function openCube(event, board) {
         revealNeighbours(board, currentCube);
         if (openedCubes === totalCubes - totalMines) {
             console.log("YOU WIN!!");
-            currentUser.time = (new Date().getTime() - currentUser.time)/1000;
+            currentUser.time = (new Date().getTime() - currentUser.time) / 1000;
             let lastMatch = new Match(board.length, totalMines, currentUser.time);
             currentUser.addMatch(lastMatch);
             finishedGame = true;
@@ -551,23 +561,24 @@ function openCube(event, board) {
             youWonMsg.classList.remove("hide");
             youLostMsg.classList.add("hide");
             document.getElementById("score-end").textContent = lastMatch.score.toFixed(0);
-            document.getElementById("time-end").textContent = lastMatch.time.toFixed(0);
+            document.getElementById("time-end").textContent = lastMatch.time.toFixed(0)+" seconds";
         }
     }
     if (finishedGame) {
         //endGame(board);
         removeClassElement(menuEnd, "hide");
-        removeClassElement(darkBackground, "hide");
-        endGame(currentBoard);
+        //removeClassElement(darkBackground, "hide");
+        //
         //update ranking
         openedCubes = 0;
-       
+
     }
 }
 
 // play with the same size
 function playAgain() {
     //delete old board and create a new one
+    endGame(currentBoard);
     createBoard(currentBoard.length, totalMines);
     addClassToElement(menuEnd, "hide");
     addClassToElement(darkBackground, "hide");
@@ -575,6 +586,7 @@ function playAgain() {
 }
 
 function newGame() {
+    endGame(currentBoard);
     addClassToElement(menuEnd, "hide");
     addClassToElement(darkBackground, "hide");
     removeClassElement(mainMenuScreen, "hide");
@@ -588,6 +600,18 @@ function endGame(board) {
             row.forEach(cube => {
                 console.log("remove");
                 cube.removeCube();
+            });
+        });
+    });
+}
+
+function showMines(board){
+    board.forEach(plane => {
+        plane.forEach(row => {
+            row.forEach(cube => {
+                if(cube.mined ===true){
+                    cube.showMine();
+                }
             });
         });
     });
@@ -716,6 +740,7 @@ function Cube(row, col, depth, cubeSize, totalDepth) {
             let myNumber = document.createElement("div");
             myNumber.textContent = this.neighbourMineCount;
             myNumber.className = ("small-cube-face " + "small-cube-face--center");
+            myNumber.style.color = CSS_COLOR_NAMES[(this.neighbourMineCount-1)%5];
             addedSmallCube.insertAdjacentElement("beforeend", myNumber);
         }
         for (let i = 0; i < CUBE_FACES.length; i++) {
@@ -981,13 +1006,13 @@ function getCurrentMatrix3D(obj) {
     return matrixFloat;
 }
 
-function translateXYZ(obj,pixX = 0, pixY = 0, pixZ = 0){
+function translateXYZ(obj, pixX = 0, pixY = 0, pixZ = 0) {
     let translationMatrix = [
         [1, 0, 0, 0],
         [0, 1, 0, 0],
         [0, 0, 1, 0],
         [pixX, pixY, pixZ, 1]
-    ];  
+    ];
     let currentMatrix = getCurrentMatrix3D(obj);
     let translatedMatrix = multiplyMatrices(currentMatrix, translationMatrix);
     obj.style.transform = "matrix3d(" + translatedMatrix.join() + ")";
@@ -1029,6 +1054,3 @@ function multiplyMatrices(matrixA, matrixB) {
         });
     });
 }
-
-
-
