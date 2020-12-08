@@ -11,9 +11,7 @@
   <h1 align="center">3D Minesweeper</h1>
 
   <p align="center">
-
     <a href="https://tonijorda.com/myProjects/vanillaJS/3DMinesweeper">View Demo</a>
-
   </p>
 </p>
 
