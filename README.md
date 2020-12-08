@@ -8,11 +8,10 @@
 <p align="center">
 
 
-  <h3 align="center">3D Minesweeper</h3>
+  <h1 align="center">3D Minesweeper</h1>
 
   <p align="center">
-    Short sentence
-    <br />
+
     <a href="https://tonijorda.com/myProjects/vanillaJS/3DMinesweeper">View Demo</a>
 
   </p>
