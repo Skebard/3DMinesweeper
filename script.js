@@ -10,6 +10,8 @@ const PASSWORD_REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const CHECK_ICON = '<i class="far fa-check-circle my-check label-icon"></i>';
 const CROSS_ICON = '<i class="far fa-times-circle my-cross label-icon"></i>';
+const CSS_COLOR_NAMES= ["chartreuse","chocolate","darkgoldenrod","darkturquoise","red"];
+//rebeccapurple nice color
 
 //HTML elements
 let mainBoard = document.querySelector(".main-board");
@@ -48,6 +50,8 @@ let usernameHeader = document.getElementById("username-header");
 let logInIcon = document.getElementById("log-in-icon");
 let logOutIcon = document.getElementById("log-out-icon");
 let rankingDisplay = document.querySelector("section.my-ranking");
+let youWonMsg = document.getElementById("end-winning");
+let youLostMsg = document.getElementById("end-losing");
 
 //game variables
 let totalMines;
@@ -60,14 +64,15 @@ let currentBoard;
 let users = [];
 let currentUser;
 
+introMainCube();
 
 
-setTimeout(()=>{
-    rankingDisplay.style.right = -rankingDisplay.offsetWidth +"px";
-},200);
-rankingDisplay.addEventListener("mouseover",rankingOver);
-rankingDisplay.addEventListener("mouseout",rankingOut);
-rankingDisplay.addEventListener("click",showRanking);
+setTimeout(() => {
+    rankingDisplay.style.right = -rankingDisplay.offsetWidth + "px";
+}, 200);
+rankingDisplay.addEventListener("mouseover", rankingOver);
+rankingDisplay.addEventListener("mouseout", rankingOut);
+rankingDisplay.addEventListener("click", showRanking);
 
 //todo set elements position
 
@@ -75,7 +80,7 @@ rankingDisplay.addEventListener("click",showRanking);
 
 //todo DEFAULT USERS
 
-users.push(new User(false,"Antonio","1234asdfA",false));
+users.push(new User(false, "Antonio", "1234asdfA", false));
 
 
 //todo EVENT LISTENERS
@@ -89,7 +94,7 @@ btnPlayAgain.addEventListener("click", playAgain);
 btnNewGame.addEventListener("click", newGame);
 
 //log out 
-logOutIcon.addEventListener("click",logOut);
+logOutIcon.addEventListener("click", logOut);
 
 
 // Forms management
@@ -102,20 +107,20 @@ selectRegister.addEventListener("click", () => {
     addClassToElement(guestForm, "hide");
 });
 selectLogIn.addEventListener("click", displayLogIn);
-logInHeader.addEventListener("click", ()=>{
+logInHeader.addEventListener("click", () => {
     displayLogIn();
 
-    if(gameScreen.classList.contains("hide")){
-            menuCube.style.transform = "translateZ(-225px) rotateY(0)";
-            users.pop();
-    }else if(menuEnd.classList.contains("hide")===false){
-        if(currentUser.matches.lengh===0){
+    if (gameScreen.classList.contains("hide")) {
+        menuCube.style.transform = "translateZ(-225px) rotateY(0)";
+        users.pop();
+    } else if (menuEnd.classList.contains("hide") === false) {
+        if (currentUser.matches.lengh === 0) {
             users.pop()
         }
-        
+
         showMainMenu();
     }
-    
+
 
 });
 selectGuest.addEventListener("click", () => {
@@ -166,44 +171,77 @@ btnGuest.addEventListener("click", () => {
 
 
 //Rotate cube
-arrowRight.addEventListener("mousedown", () => {
-    eventRotate(rotateY, -1, arrowRight);
+arrowRight.addEventListener("mousedown", (event) => {
+    eventRotate(rotateY, -1, arrowRight,event);
 });
-arrowTop.addEventListener("mousedown", () => {
-    eventRotate(rotateX, -1, arrowTop);
+arrowTop.addEventListener("mousedown", (event) => {
+    eventRotate(rotateX, -1, arrowTop,event);
 });
-arrowLeft.addEventListener("mousedown", () => {
-    eventRotate(rotateY, 1, arrowLeft);
+arrowLeft.addEventListener("mousedown", (event) => {
+    eventRotate(rotateY, 1, arrowLeft,event);
 });
-arrowBottom.addEventListener("mousedown", () => {
-    eventRotate(rotateX, 1, arrowBottom);
+arrowBottom.addEventListener("mousedown", (event) => {
+    eventRotate(rotateX, 1, arrowBottom,event);
 });
 
-function rankingOver(){
-    rankingDisplay.style.right = -rankingDisplay.offsetWidth +"px";
+
+function introMainCube(durationSec, spins) {
+    let fullSpins=1;
+    let faceSize = 450;
+    let interval;
+    translateXYZ(menuCube,0,0,-faceSize*4*fullSpins);
+    let positionZ = 0;
+    
+    let myTransition = setInterval(function () {
+        translateXYZ(menuCube, 0, 0, faceSize / 30);
+        rotateX(menuCube, 3);
+        positionZ+=faceSize/30;
+     
+        if(positionZ===faceSize*4*fullSpins){
+            clearInterval(myTransition);
+            menuCube.style.transition = "all 1.5s"
+        }
+
+    }, 7); // 30 cicles per face 300ms/face 1200ms/spin
+
+
 }
-function rankingOut(){
-    rankingDisplay.style.right = -rankingDisplay.offsetWidth +"px";
+
+
+
+
+
+
+
+
+
+function rankingOver() {
+    rankingDisplay.style.right = -rankingDisplay.offsetWidth + "px";
 }
-function showRanking(){
+
+function rankingOut() {
+    rankingDisplay.style.right = -rankingDisplay.offsetWidth + "px";
+}
+
+function showRanking() {
     darkBackground.classList.remove("hide");
     rankingDisplay.style.right = "0px";
-    rankingDisplay.removeEventListener("mouseover",rankingOver);
-    rankingDisplay.removeEventListener("mouseout",rankingOut);
-    rankingDisplay.removeEventListener("click",showRanking);
-    rankingDisplay.addEventListener("click",function hideRanking(){
-        rankingDisplay.style.right = -rankingDisplay.offsetWidth +"px";
-        rankingDisplay.removeEventListener("click",hideRanking);
-        rankingDisplay.addEventListener("click",showRanking);
-        rankingDisplay.addEventListener("mouseover",rankingOver);
-        rankingDisplay.addEventListener("mouseout",rankingOut);
+    rankingDisplay.removeEventListener("mouseover", rankingOver);
+    rankingDisplay.removeEventListener("mouseout", rankingOut);
+    rankingDisplay.removeEventListener("click", showRanking);
+    rankingDisplay.addEventListener("click", function hideRanking() {
+        rankingDisplay.style.right = -rankingDisplay.offsetWidth + "px";
+        rankingDisplay.removeEventListener("click", hideRanking);
+        rankingDisplay.addEventListener("click", showRanking);
+        rankingDisplay.addEventListener("mouseover", rankingOver);
+        rankingDisplay.addEventListener("mouseout", rankingOut);
         darkBackground.classList.add("hide");
 
     });
 }
 
 
-function showMainMenu(){
+function showMainMenu() {
     menuCube.style.transform = "translateZ(-225px) rotateY(0)";
     mainMenuScreen.classList.remove("hide");
     gameScreen.classList.add("hide");
@@ -211,7 +249,7 @@ function showMainMenu(){
     darkBackground.classList.add("hide");
 }
 
-function logOut(){
+function logOut() {
     logOutIcon.classList.add("hide");
     logInIcon.classList.remove("hide");
     usernameHeader.classList.add("hide");
@@ -233,16 +271,15 @@ function startGame() {
     // if mode custom check size and mines
     if ((selectSize.value === "") || (parseInt(selectSize.value) < 2) || (parseInt(selectSize.value) > 15)) {
         //error
-        console.log("size is wrong");
         return false;
     } else {
         if ((parseInt(selectMines.value) >= Math.pow(parseInt(selectSize.value), 3)) || (selectMines.value === "") || (parseInt(selectMines.value) < 1)) {
             //error
-            console.log("number of mines wrong");
+           
             return false;
         }
     }
-    console.log("game starts!!");
+    
     createBoard(selectSize.value, selectMines.value);
     mainMenuScreen.classList.add("hide");
     gameScreen.classList.remove("hide");
@@ -269,12 +306,12 @@ function removeClassElement(form, klass) {
 
 
 
-function showCurrentUser(user){
-        logInHeader.classList.add("hide");
-        usernameHeader.innerHTML = user.username;
-        usernameHeader.classList.remove("hide");
-        logInIcon.classList.add("hide");
-        logOutIcon.classList.remove("hide");
+function showCurrentUser(user) {
+    logInHeader.classList.add("hide");
+    usernameHeader.innerHTML = user.username;
+    usernameHeader.classList.remove("hide");
+    logInIcon.classList.add("hide");
+    logOutIcon.classList.remove("hide");
 }
 
 
@@ -303,7 +340,7 @@ function checkFormInputs(form) {
     } else {
         //error
         labels[0].innerHTML = "Choose your username" + CROSS_ICON;
-        console.log("error username");
+        
     }
 
     if (PASSWORD_REGEX.test(inputs[1].value)) {
@@ -313,7 +350,7 @@ function checkFormInputs(form) {
     } else {
         //error
         labels[1].innerHTML = "Password" + CROSS_ICON;
-        console.log("error pass");
+      
     }
 
     if (inputs[2] !== undefined) {
@@ -323,7 +360,7 @@ function checkFormInputs(form) {
         } else {
             //error  passwords do not match
             labels[2].innerHTML = "Confirm password" + CROSS_ICON;
-            console.log("error conf pass");
+          
         }
     }
 
@@ -336,19 +373,19 @@ function checkFormInputs(form) {
         } else {
             //error
             labels[3].innerHTML = "Email" + CROSS_ICON;
-            console.log("error email")
+           
         }
     }
 
     if (inputs.length === verifiedFields) {
         let newUser;
-        console.log("all good");
+      
         switch (inputs.length) {
             case 2: // log in
-                console.log(logInUser(username, password));
+                
                 if (logInUser(username, password) !== false) {
                     rotateY(menuCube, -90);
-                    console.log("rotate");
+                   
                     showCurrentUser(logInUser(username, password));
                 } else {
                     labels[0].innerHTML = "Choose your username" + CROSS_ICON;
@@ -359,12 +396,12 @@ function checkFormInputs(form) {
                 let error = 0;
                 users.forEach(user => {
                     if (user.username === username) {
-                        console.log("usernam already exists");
+                      
 
                         error++;
                     }
                     if (user.email === email) {
-                        console.log("email already exists");
+                      
                         error++;
                     }
                 });
@@ -374,7 +411,7 @@ function checkFormInputs(form) {
                 rotateY(menuCube, -90);
                 newUser = new User(false, username, password, email);
                 users.push(newUser);
-                console.log(newUser);
+               
                 showCurrentUser(newUser);
                 return newUser;
                 break;
@@ -382,7 +419,7 @@ function checkFormInputs(form) {
                 break;
         }
     } else {
-        console.log("somt wrong");
+    
         return false;
     }
 }
@@ -391,12 +428,12 @@ function logInUser(username, password) {
     let match = false;
     let foundUser;
     users.forEach((user) => {
-        console.log("username: " + user.username);
+        
 
         if (user.username === username) {
-            console.log(user.verifyPassword(password));
+          
             if (user.verifyPassword(password)) {
-                console.log("match");
+              
                 match = true;
                 foundUser = user;
             }
@@ -410,18 +447,18 @@ function newGuest() {
     rotateY(menuCube, -90);
     let newUser = new User(true, "A_" + new Date().getTime().toString().slice(-10));
     users.push(newUser);
-    console.log(newUser);
+  
     return newUser;
 
 }
 
 
 
-function updateRanking(){
+function updateRanking() {
     //get array with name an scores
     let matches = [];
-    users.forEach(user=>{
-        user.matches.forEach(match=>{
+    users.forEach(user => {
+        user.matches.forEach(match => {
             matches.push({
                 name: user.username,
                 score: match.score
@@ -429,10 +466,42 @@ function updateRanking(){
         });
     });
     // ordenate games from higher score to lower
-    matches.sort((gameA,gameB)=>{
+    matches.sort((gameA, gameB) => {
         return gameB.score - gameA.score;
     });
-    return matches;
+
+
+    let playerNames = document.querySelectorAll(".ranking dt");
+    let playerScores = document.querySelectorAll(".ranking dd");
+    //delete old records
+    playerNames.forEach((name, index) => {
+        if (index > 2) {
+            name.remove();
+            playerScores[index].remove();
+        } else {
+            name.querySelector("span").textContent = "";
+            playerScores[index].textContent = "";
+        }
+    });
+    let rankingList = document.querySelector(".ranking");
+    playerNames = document.querySelectorAll(".ranking dt");
+    playerScores = document.querySelectorAll(".ranking dd");
+    matches.forEach((match, index) => {
+        if (index < playerNames.length) {
+            playerNames[index].querySelector("span").textContent = match.name;
+            playerScores[index].textContent = match.score.toFixed(0);
+        } else {
+            let newPlayer = document.createElement("dt");
+            newPlayer.innerHTML = `<i>${index+1}</i><span>${match.name}</span>`;
+            newPlayer.classList.add("not-top-ranking");
+            let newScore = document.createElement("dd");
+            newScore.innerHTML = match.score.toFixed(0);
+            rankingList.appendChild(newPlayer);
+            rankingList.appendChild(newScore);
+        }
+    });
+    rankingDisplay.style.right = -rankingDisplay.offsetWidth + "px";
+
 }
 
 
@@ -470,37 +539,45 @@ function openCube(event, board) {
     let finishedGame = false;
     if (currentCube.mined === true) {
         currentCube.showMine();
-        console.log("YOU LOST!!!");
-
+      
+        youWonMsg.classList.add("hide");
+        youLostMsg.classList.remove("hide");
+        showMines(currentBoard);
         finishedGame = true;
     } else {
         openedCubes++;
-        console.log(currentCube);
+       
         currentCube.showNeighbourNumber();
         currentCube.opened = true;
         revealNeighbours(board, currentCube);
         if (openedCubes === totalCubes - totalMines) {
-            console.log("YOU WIN!!");
-            currentUser.time = (new Date().getTime() - currentUser.time)/1000;
+        
+            currentUser.time = (new Date().getTime() - currentUser.time) / 1000;
             let lastMatch = new Match(board.length, totalMines, currentUser.time);
             currentUser.addMatch(lastMatch);
             finishedGame = true;
+            updateRanking();
+            youWonMsg.classList.remove("hide");
+            youLostMsg.classList.add("hide");
+            document.getElementById("score-end").textContent = lastMatch.score.toFixed(0);
+            document.getElementById("time-end").textContent = lastMatch.time.toFixed(0)+" seconds";
         }
     }
     if (finishedGame) {
         //endGame(board);
         removeClassElement(menuEnd, "hide");
-        removeClassElement(darkBackground, "hide");
-        endGame(currentBoard);
+        //removeClassElement(darkBackground, "hide");
+        //
         //update ranking
         openedCubes = 0;
-       
+
     }
 }
 
 // play with the same size
 function playAgain() {
     //delete old board and create a new one
+    endGame(currentBoard);
     createBoard(currentBoard.length, totalMines);
     addClassToElement(menuEnd, "hide");
     addClassToElement(darkBackground, "hide");
@@ -508,6 +585,7 @@ function playAgain() {
 }
 
 function newGame() {
+    endGame(currentBoard);
     addClassToElement(menuEnd, "hide");
     addClassToElement(darkBackground, "hide");
     removeClassElement(mainMenuScreen, "hide");
@@ -519,8 +597,20 @@ function endGame(board) {
     board.forEach(plane => {
         plane.forEach(row => {
             row.forEach(cube => {
-                console.log("remove");
+            
                 cube.removeCube();
+            });
+        });
+    });
+}
+
+function showMines(board){
+    board.forEach(plane => {
+        plane.forEach(row => {
+            row.forEach(cube => {
+                if(cube.mined ===true){
+                    cube.showMine();
+                }
             });
         });
     });
@@ -569,6 +659,9 @@ function Match(size, mines, time) {
 //create a cube board
 // size(mandatory): size of cube
 function createBoard(size, mines) {
+    if(currentBoard!==undefined){
+        endGame(currentBoard);
+    }
     let cubeSize = SMALL_CUBE_SIZE + MARGIN_SMALL_CUBE;
     let totalDepth = size;
     defineMainCubeSize(size, cubeSize);
@@ -595,7 +688,7 @@ function createBoard(size, mines) {
         });
     });
     currentBoard = board;
-    console.log(board);
+ 
     currentUser.time = new Date().getTime();
     return board;
 }
@@ -611,7 +704,7 @@ function Cube(row, col, depth, cubeSize, totalDepth) {
     smallCube.style.transform += "translateY(" + row * cubeSize + "px)";
     //smallCube.style.transform += "translateZ("+ (-totalDepth/2)+(cubeSize/2)+depth*cubeSize+"px)";
     let moveZ = (-totalDepth * cubeSize / 2) + (cubeSize / 2) + cubeSize * depth;
-    console.log(moveZ);
+  
     smallCube.style.transform += "translateZ(" + moveZ + "px)";
 
 
@@ -649,6 +742,7 @@ function Cube(row, col, depth, cubeSize, totalDepth) {
             let myNumber = document.createElement("div");
             myNumber.textContent = this.neighbourMineCount;
             myNumber.className = ("small-cube-face " + "small-cube-face--center");
+            myNumber.style.color = CSS_COLOR_NAMES[(this.neighbourMineCount-1)%5];
             addedSmallCube.insertAdjacentElement("beforeend", myNumber);
         }
         for (let i = 0; i < CUBE_FACES.length; i++) {
@@ -728,7 +822,7 @@ function assignNeighbourMineCount(board) {
                                 if ((el[key] !== null) && (el[key].mined === true)) {
                                     element.neighbourMineCount++;
                                     if (element.neighbourMineCount > 1) {
-                                        console.log("bomb around!")
+                                       
                                         element.showId();
                                         el[key].showId();
                                     }
@@ -737,7 +831,7 @@ function assignNeighbourMineCount(board) {
                         }
                     });
                 } else {
-                    console.log("I AM A BOMB!!!")
+                    
                     element.showId();
                 }
             });
@@ -824,16 +918,21 @@ function getCell(matrix, y, x) {
 
 //todo ********* MATRIX ROTATIONS **********
 
-function eventRotate(rotateFunction, direction, element) {
+function eventRotate(rotateFunction, direction, element,event) {
+    if(event!==undefined){
+        event.currentTarget.style.opacity = "0.5";
+    }
     let smooth = setInterval(function () {
         rotateFunction(mainCube, ROTATE_INTERVAL * direction);
     }, 25);
-    element.addEventListener("mouseout", () => {
+    element.addEventListener("mouseout", (e) => {
+        e.currentTarget.style.opacity = "1";
         clearInterval(smooth);
     }, {
         once: true
     });
-    element.addEventListener("mouseup", () => {
+    element.addEventListener("mouseup", (e) => {
+        e.currentTarget.style.opacity = "1";
         clearInterval(smooth);
     }, {
         once: true
@@ -914,6 +1013,19 @@ function getCurrentMatrix3D(obj) {
     return matrixFloat;
 }
 
+function translateXYZ(obj, pixX = 0, pixY = 0, pixZ = 0) {
+    let translationMatrix = [
+        [1, 0, 0, 0],
+        [0, 1, 0, 0],
+        [0, 0, 1, 0],
+        [pixX, pixY, pixZ, 1]
+    ];
+    let currentMatrix = getCurrentMatrix3D(obj);
+    let translatedMatrix = multiplyMatrices(currentMatrix, translationMatrix);
+    obj.style.transform = "matrix3d(" + translatedMatrix.join() + ")";
+    return translatedMatrix;
+}
+
 //todo ******* MATH OPERATIONS **************
 
 function getRandom(min, max) {
@@ -949,6 +1061,3 @@ function multiplyMatrices(matrixA, matrixB) {
         });
     });
 }
-
-
-

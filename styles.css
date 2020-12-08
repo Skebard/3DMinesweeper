@@ -47,7 +47,7 @@ header {
     position: relative;
     width: 100%;
     height: 7rem;
-    border: 1px solid black;
+
     display: flex;
     justify-content: space-between;
     flex-wrap: nowrap;
@@ -144,7 +144,7 @@ form .my-cross {
     right: 0;
     bottom: 0;
     padding: 1rem;
-    z-index: 20;
+    z-index: 5;
     animation: shiftLeft 1s 1;
 }
 
@@ -252,6 +252,7 @@ form>button {
 }
 
 .user-options>li {
+    color:#c3c7d3;
     font-weight: bold;
     text-shadow: 1px 1px 1px #919191,
         1px 2px 1px #919191,
@@ -268,13 +269,14 @@ form>button {
 
 .user-options>li.selected {
     opacity: 1;
+    background-color: white;
+    color: rgb(31, 27, 68);
 }
 
 
 
 .selected {
-    background-color: white;
-    color: rgb(31, 27, 68);
+
 
 }
 
@@ -411,8 +413,9 @@ form>button {
 
 .ranking {
     padding-right:2rem;
-    overflow-y:scroll;
+    overflow-y:auto;
     max-height:50vh;
+    min-height:174px;
     border: 1px solid white;
     transition: all 5s;
     z-index: 100;
@@ -474,7 +477,7 @@ footer {
     height: 5rem;
     bottom: 0;
     left: 0;
-    border: 1px solid black;
+
 }
 
 /***** MENU CUBE ******/
@@ -491,10 +494,9 @@ footer {
     position: relative;
     transform-style: preserve-3d;
     transform: translateZ(-225px);
-    transition: all 2.5s;
 }
 
-.menu-cube-face {
+div.menu-cube-face {
     position: absolute;
     width: 450px;
     height: 450px;
@@ -503,6 +505,10 @@ footer {
     color: white;
     text-align: center;
     display: block;
+    background-color:white;
+    border:1rem solid black;
+    box-shadow: 0 0 2rem black;
+
 
 }
 
@@ -510,6 +516,7 @@ footer {
 .menu-cube-face--front {
     transform: rotateY(0deg) translateZ(225px);
     background: hsla(0, 100%, 50%, 0.7);
+   
 
     display: block;
 }
@@ -553,7 +560,7 @@ footer {
     align-items: center;
     width: 100%;
     min-height: 80vh;
-    border: 3px solid red;
+
     padding: 50px;
     position: relative;
     overflow: hidden;
@@ -644,15 +651,21 @@ footer {
     cursor: pointer;
 }
 
-.small-cube-face {
+div.small-cube-face {
     position: absolute;
     width: 50px;
     height: 50px;
-    border: 2px solid black;
+    /*border: 2px solid black;*/
     line-height: 50px;
     font-weight: bold;
     color: white;
     text-align: center;
+    background: hsla(0, 14%, 74%, 0.38);
+    box-shadow: inset 0 0 0.5rem white;
+}
+.mine div.small-cube-face{
+    background-color:hsla(0, 66%, 38%,0.38);
+    box-shadow: inset 0 0 1rem red;
 }
 
 
@@ -686,7 +699,8 @@ footer {
     background: hsla(300, 100%, 50%, 0.7);
 }
 
-.mini-cube .small-cube-face--center {
+.mini-cube div.small-cube-face--center {
+    box-shadow:none;
     transform: rotateY(45deg);
     background-color: transparent;
     color: black;
@@ -720,43 +734,54 @@ footer {
 }
 
 .rotate-right {
-    right: -80px;
-    border-left: 40px solid blue;
+    right: -50px;
+    border-left: 40px solid #9090ac61;
 }
 
 .rotate-left {
-    left: -80px;
-    border-right: 40px solid blue;
+    left: -50px;
+    border-right: 40px solid #9090ac61;
 }
 
 .rotate-top {
     top: -80px;
-    border-bottom: 40px solid blue;
+    border-bottom: 40px solid #9090ac61;
 }
 
 .rotate-bottom {
     bottom: -80px;
-    border-top: 40px solid blue;
+    border-top: 40px solid #9090ac61;
 }
 
 /***** End game menu *****/
 .menu-end-game {
     position: absolute;
-    width: 20rem;
-    height: 20rem;
-    background-color: red;
+    width: 25rem;
+    height: 25rem;
+    background-color: transparent;
     margin: auto;
     right: 0;
     left: 0;
     top: 0;
     bottom: 0;
-    z-index: 1000;
+    z-index: 15;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
+.menu-end-game *{
+    text-align:center;
+}
 
+.displayLost{
+    color:red;
+    text-shadow: 1px 1px 1px darkred, 2px 1px 1px darkred;
+}
+.displayWon{
+    color: limegreen;
+    text-shadow: 1px 1px 1px darkgreen, 2px 1px 1px darkgreen;
+}
 .menu-end-game.hide {
     display: none;
 }
