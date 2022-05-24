@@ -1,0 +1,24 @@
+{
+  "name": "3dminesweeper",
+  "version": "1.0.0",
+  "description": "[![LinkedIn][linkedin-shield]][linkedin-url]",
+  "main": "hi.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "lite-server",
+    "build:watch": "tsc --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Skebard/3DMinesweeper.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Skebard/3DMinesweeper/issues"
+  },
+  "homepage": "https://github.com/Skebard/3DMinesweeper#readme",
+  "devDependencies": {
+    "lite-server": "^2.6.1"
+  }
+}
