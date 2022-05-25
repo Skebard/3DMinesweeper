@@ -54,7 +54,7 @@ export default class Move {
     this.updateCurrentMatrix(translatedMatrix);
   }
 
-  getRotatedMatrix(rotationMatrix: Matrix): Matrix {
+  private getRotatedMatrix(rotationMatrix: Matrix): Matrix {
     let currentMatrix = this.currentMatrix
       ? this.currentMatrix
       : MatrixUtils.getCurrentMatrix3D(this.obj);
